@@ -1,0 +1,2 @@
+token=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
+repo=rickyegl/FTC-Blanco

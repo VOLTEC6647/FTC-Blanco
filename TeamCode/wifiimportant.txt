@@ -1,0 +1,7 @@
+org.firstinspires.ftc.ftcaccesspointservice
+
+adb shell pm disable-user org.firstinspires.ftc.ftcaccesspointservice
+
+adb shell pm enable org.firstinspires.ftc.ftcaccesspointservice // Si no funciona tu problema. Creo que lo resolviste reseteando permisos
+
+10.8.80.216
