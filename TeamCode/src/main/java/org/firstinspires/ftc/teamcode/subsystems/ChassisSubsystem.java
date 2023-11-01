@@ -22,7 +22,6 @@ public class ChassisSubsystem {
 
     private static ChassisSubsystem instance;
     private HardwareMap hardwareMap;
-    
     private DcMotor FrontLeftMotor;
     private DcMotor FrontRightMotor;
     private DcMotor BackLeftMotor;
