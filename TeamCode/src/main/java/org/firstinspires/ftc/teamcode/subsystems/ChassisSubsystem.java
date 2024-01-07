@@ -95,7 +95,7 @@ public class ChassisSubsystem {
                   telemetry.addData("angularError",angularError);
                   double angularThreshold = 10;
                   if(Math.abs(angularError)>angularThreshold){
-                      r=angularError*0.1;
+                      r=angularError*0.05;
                   }
               }
 
@@ -173,7 +173,7 @@ public class ChassisSubsystem {
         BackRightMotor.setPower(backRightPower);
     }
 
-    public void rotateAngle(double deg){
+    public void setTargetAngle(double deg){
         targetAngle=deg;
         if (targetAngle<0){
             targetAngle=360+targetAngle;
