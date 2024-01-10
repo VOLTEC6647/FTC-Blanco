@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -33,6 +35,7 @@ public class Chassis extends LinearOpMode {
     boolean hasTarget=false;
     public double gyr;
 
+
     public ChassisSubsystem chassis;
 
     void ElevatorMethods(ElevatorSubsystem elevator){
@@ -63,16 +66,19 @@ public class Chassis extends LinearOpMode {
         if(this.gamepad1.start){
             if (this.gamepad1.dpad_up){
                 gyroscope.setOffset(180);
-
+                chassis.updateTargetAngle();
             }
             if (this.gamepad1.dpad_right){
                 gyroscope.setOffset(270);
+                chassis.updateTargetAngle();
             }
             if (this.gamepad1.dpad_down){
                 gyroscope.setOffset(0);
+                chassis.updateTargetAngle();
             }
             if (this.gamepad1.dpad_left){
                 gyroscope.setOffset(90);
+                chassis.updateTargetAngle();
             }
         }
         chassis.arcadeDrive(this.gamepad1.left_stick_x,-this.gamepad1.left_stick_y,this.gamepad1.right_stick_x,speed,gyr);
@@ -109,6 +115,7 @@ public class Chassis extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        //this.telemetry = telemetry;
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         //imu = hardwareMap.get(IMU.class, "imu");
         if(Parameters.robot=="marvin"){
@@ -122,7 +129,7 @@ public class Chassis extends LinearOpMode {
         ChassisSubsystem chassis=ChassisSubsystem.getInstance(hardwareMap,telemetry);
         //ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
-        //ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap);
+        ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         /////////////////////////////
         //orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -135,7 +142,7 @@ public class Chassis extends LinearOpMode {
 
         waitForStart();
 
-
+        arm.setZero();
 
         while(opModeIsActive()) {
 
@@ -143,7 +150,7 @@ public class Chassis extends LinearOpMode {
 
             //ElevatorMethods(elevator);
 
-            //ArmMethods();
+            ArmMethods();
 
             telemetry.update();
 

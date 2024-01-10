@@ -72,9 +72,6 @@ public class ChassisSubsystem {
         return instance;
       }
 
-
-
-
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
 
         //r is right stick x
@@ -153,7 +150,7 @@ public class ChassisSubsystem {
 
         backLeftPower = speed*(x - y - r);
         backRightPower = speed*(y + x - r);
-        frontRightPower =  -speed*(y - x - r);
+        frontRightPower =  speed*(y - x - r);
         frontLeftPower= -(y + x + r)*speed;
 
 
@@ -175,6 +172,16 @@ public class ChassisSubsystem {
 
     public void setTargetAngle(double deg){
         targetAngle=deg;
+        if (targetAngle<0){
+            targetAngle=360+targetAngle;
+        }
+        if (targetAngle>360){
+            targetAngle=targetAngle-360;
+        }
+    }
+
+    public void rotateDeg(double deg){
+        targetAngle+=deg;
         if (targetAngle<0){
             targetAngle=360+targetAngle;
         }
