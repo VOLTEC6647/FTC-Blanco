@@ -39,10 +39,32 @@ public class Chassis extends LinearOpMode {
     public ChassisSubsystem chassis;
 
     void ElevatorMethods(ElevatorSubsystem elevator){
+        /*
         if(this.gamepad1.right_trigger>0.1){
             elevator.goUp(this.gamepad1.right_trigger);
         }else if(this.gamepad1.left_trigger<0.1){
             elevator.goDown(this.gamepad1.left_trigger);
+        }
+        */
+        if(!this.gamepad1.start) {
+            if (this.gamepad1.dpad_up && this.gamepad1.b) {
+                elevator.elevator1.setPower(-1);
+            } else if (this.gamepad1.dpad_down && this.gamepad1.b) {
+                elevator.elevator1.setPower(1);
+            } else if (this.gamepad1.dpad_up && this.gamepad1.a) {
+                elevator.elevator1.setPower(-1);
+            } else if (this.gamepad1.dpad_down && this.gamepad1.a) {
+                elevator.elevator1.setPower(1);
+            } else if (this.gamepad1.dpad_up) {
+                elevator.elevator2.setPower(-1);
+                elevator.elevator1.setPower(-1);
+            } else if (this.gamepad1.dpad_down) {
+                elevator.elevator2.setPower(1);
+                elevator.elevator1.setPower(1);
+            } else {
+                elevator.elevator1.setPower(0);
+                elevator.elevator2.setPower(0);
+            }
         }
     }
     void ChassisMethods(ChassisSubsystem chassis, GyroscopeSubsystem gyroscope){
@@ -96,7 +118,6 @@ public class Chassis extends LinearOpMode {
         //telemetry.addData("GyroX", AGyroscope.getX());
         //telemetry.addData("GyroY", AGyroscope.getY());
         telemetry.addData("Gyro", orientation.firstAngle);
-        //telemetry.update();
 
         if(this.gamepad1.a){
             //intake.setPower(-1);
@@ -124,12 +145,11 @@ public class Chassis extends LinearOpMode {
 
 
         telemetry.addData("Status", "Initialized");
-        telemetry.update();
         /////////////////////////////
         ChassisSubsystem chassis=ChassisSubsystem.getInstance(hardwareMap,telemetry);
-        //ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
+        ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
-        ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
+        //ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         /////////////////////////////
         //orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -142,13 +162,13 @@ public class Chassis extends LinearOpMode {
 
         waitForStart();
 
-        arm.setZero();
+        //arm.setZero();
 
         while(opModeIsActive()) {
 
             ChassisMethods(chassis,gyroscope);
 
-            //ElevatorMethods(elevator);
+            ElevatorMethods(elevator);
 
             ArmMethods();
 
