@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 public class Chassis extends LinearOpMode {
 
     private Blinker control_Hub;
-    private double speed=1;
+    private double speed = 1;
     private IMU imu;
     private double baseSpeed=0.5;
     private Orientation orientation;
@@ -139,7 +139,7 @@ public class Chassis extends LinearOpMode {
         //this.telemetry = telemetry;
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         //imu = hardwareMap.get(IMU.class, "imu");
-        if(Parameters.robot=="marvin"){
+        if (Parameters.robot == "marvin") {
             intake = hardwareMap.get(DcMotor.class, "IntakeMotor");
         }
 

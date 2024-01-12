@@ -128,13 +128,13 @@ public class ChassisSubsystem {
         telemetry.addData("pi", Math.PI);
         //x = Math.cos(0.7) * x - Math.sin(0.7) * y; // cos(°) sin(°)
         //y = Math.cos(0.7) * x + Math.sin(0.7) * y;
-        frontRightPower=0;
-        backLeftPower=0;
-        frontLeftPower=0;
-        backRightPower=0;
-        if(Parameters.robot=="marvin"){
+        frontRightPower = 0;
+        backLeftPower = 0;
+        frontLeftPower = 0;
+        backRightPower = 0;
+        if (Parameters.robot == "marvin") {
             frontLeftPower=-speed*(y + x - r);
-        }else{
+        } else {
 
         }
         // = /*-*/speed*(y + x - r);
