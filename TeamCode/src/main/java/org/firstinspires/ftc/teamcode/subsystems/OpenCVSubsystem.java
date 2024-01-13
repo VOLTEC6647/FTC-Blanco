@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+import static java.lang.Thread.sleep;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
@@ -12,22 +12,15 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Odometry;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name = "OpenCV Testing")
-
-public class OpenCVSubsystem extends LinearOpMode {
+public class OpenCVSubsystem {
     public static HardwareMap hardwareMap;
 
     public OpenCVSubsystem(HardwareMap hardwareMap) {
         OpenCVSubsystem.hardwareMap = hardwareMap;
+        initOpenCV();
     }
 
     public static OpenCVSubsystem getInstance(HardwareMap hardwareMap){
@@ -39,7 +32,7 @@ public class OpenCVSubsystem extends LinearOpMode {
 
     double cX = 0;
     double cY = 0;
-    double width = 0;
+    public double width = 0;
 
     private OpenCvCamera controlHubCam;  // Use OpenCvCamera class from FTC SDK
     private static final int CAMERA_WIDTH = 640; // width  of wanted camera resolution
@@ -48,25 +41,6 @@ public class OpenCVSubsystem extends LinearOpMode {
     // Calculate the distance using the formula
     public static final double objectWidthInRealWorldUnits = 3.75;  // Replace with the actual width of the object in real-world units
     public static final double focalLength = 728;  // Replace with the focal length of the camera in pixels
-
-
-    @Override
-    public void runOpMode() {
-
-        initOpenCV();
-        waitForStart();
-
-        while (opModeIsActive()) {
-            telemetry.addData("Coordinate", "(" + (int) cX + ", " + (int) cY + ")");
-            telemetry.addData("Distance in Inch", (getDistance(width)));
-            telemetry.update();
-
-            // The OpenCV pipeline automatically processes frames and handles detection
-        }
-
-        // Release resources
-        controlHubCam.stopStreaming();
-    }
 
     private void initOpenCV() {
 
@@ -83,8 +57,9 @@ public class OpenCVSubsystem extends LinearOpMode {
         controlHubCam.openCameraDevice();
         controlHubCam.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT);
     }
-    class YellowBlobDetectionPipeline extends OpenCvPipeline {
-        @Override
+    public MatOfPoint largestContour;
+    public class YellowBlobDetectionPipeline extends OpenCvPipeline {
+
         public Mat processFrame(Mat input) {
             // Preprocess the frame to detect yellow regions
             Mat yellowMask = preprocessFrame(input);
@@ -95,7 +70,7 @@ public class OpenCVSubsystem extends LinearOpMode {
             Imgproc.findContours(yellowMask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
             // Find the largest yellow contour (blob)
-            MatOfPoint largestContour = findLargestContour(contours);
+            largestContour = findLargestContour(contours);
 
             if (largestContour != null) {
                 // Draw a red outline around the largest detected object
@@ -120,6 +95,8 @@ public class OpenCVSubsystem extends LinearOpMode {
                 Imgproc.circle(input, new Point(cX, cY), 5, new Scalar(0, 255, 0), -1);
 
             }
+
+
 
             return input;
         }

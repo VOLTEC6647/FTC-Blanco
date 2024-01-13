@@ -19,14 +19,17 @@ import java.util.List;
 
 public class AprilTagSubsystem {
     private static AprilTagSubsystem instance;
-    private static HardwareMap hardwareMap;
-    public AprilTagSubsystem(HardwareMap hardwareMap) {
-        OpenCVSubsystem.hardwareMap = hardwareMap;
+    private HardwareMap hardwareMap;
+    private Telemetry telemetry;
+    public AprilTagSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
+        initAprilTag();
     }
 
-    public static AprilTagSubsystem getInstance(HardwareMap hardwareMap){
+    public static AprilTagSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry) {
         if (instance == null) {
-            instance = new AprilTagSubsystem(hardwareMap);
+            instance = new AprilTagSubsystem(hardwareMap, telemetry);
         }
         return instance;
     }
@@ -43,41 +46,7 @@ public class AprilTagSubsystem {
      */
     private VisionPortal visionPortal;
 
-    initAprilTag();
 
-    // Wait for the DS start button to be touched.
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch Play to start OpMode");
-        telemetry.update();
-    waitForStart();
-
-
-
-            telemetryAprilTag();
-
-            // Push telemetry to the Driver Station.
-            telemetry.update();
-
-            // Save CPU resources; can resume streaming when needed.
-            if (gamepad1.dpad_down) {
-                visionPortal.stopStreaming();
-            } else if (gamepad1.dpad_up) {
-                visionPortal.resumeStreaming();
-            }
-
-            // Share the CPU.
-            sleep(20);
-
-
-
-    // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
-
-}   // end method runOpMode()
-
-    /**
-     * Initialize the AprilTag processor.
-     */
     private void initAprilTag() {
 
         // Create the AprilTag processor.
@@ -119,7 +88,7 @@ public class AprilTagSubsystem {
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        builder.setCameraResolution(new Size(1080, 1920));
+        builder.setCameraResolution(new Size(640, 360));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         builder.enableLiveView(true);
@@ -143,10 +112,6 @@ public class AprilTagSubsystem {
 
     }   // end method initAprilTag()
 
-
-    /**
-     * Add telemetry about AprilTag detections.
-     */
     private void telemetryAprilTag() {
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -163,6 +128,12 @@ public class AprilTagSubsystem {
                 telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
             }
-        }
-    }
+        }   // end for() loop
+
+        // Add "key" information to telemetry
+        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+        telemetry.addLine("RBE = Range, Bearing & Elevation");
+
+    }   // end method telemetryAprilTag()
 }

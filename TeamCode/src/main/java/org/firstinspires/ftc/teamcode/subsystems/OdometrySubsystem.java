@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class Odometry {
+public class OdometrySubsystem {
     public int fieldX;
     public int fieldY;
 
@@ -18,16 +18,16 @@ public class Odometry {
 
     private ChassisSubsystem chassis;
 
-    private static Odometry instance;
-    public Odometry(HardwareMap hardwareMap, ChassisSubsystem chassis){
+    private static OdometrySubsystem instance;
+    public OdometrySubsystem(HardwareMap hardwareMap, ChassisSubsystem chassis){
         this.hardwareMap=hardwareMap;
         this.xEncoder = hardwareMap.get(DcMotor.class, "xEncoder");
         this.yEncoder = hardwareMap.get(DcMotor.class, "yEncoder");
         this.chassis = chassis;
     }
-    public static Odometry getInstance(HardwareMap hardwareMap, ChassisSubsystem chassis){
+    public static OdometrySubsystem getInstance(HardwareMap hardwareMap, ChassisSubsystem chassis){
         if (instance == null) {
-            instance = new Odometry(hardwareMap, chassis);
+            instance = new OdometrySubsystem(hardwareMap, chassis);
         }
         return instance;
     }
