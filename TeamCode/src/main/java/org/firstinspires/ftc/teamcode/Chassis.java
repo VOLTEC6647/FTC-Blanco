@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DroneLauncherSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Odometry;
@@ -29,7 +30,7 @@ public class Chassis extends LinearOpMode {
     private Blinker control_Hub;
     private double speed=1;
     private IMU imu;
-    private double baseSpeed=0.5;
+    public double baseSpeed=1;
     private Orientation orientation;
     private DcMotor intake;
     boolean hasTarget=false;
@@ -46,7 +47,15 @@ public class Chassis extends LinearOpMode {
             elevator.goDown(this.gamepad1.left_trigger);
         }
         */
+        if(this.gamepad1.left_trigger>0.3){
+            elevator.DebugSpeed = 1.4-this.gamepad1.left_trigger;
+        }
+        else{
+            elevator.DebugSpeed = 1;
+        }
+        elevator.getPosition(telemetry);
         if(!this.gamepad1.start) {
+            /*
             if (this.gamepad1.dpad_up && this.gamepad1.b) {
                 elevator.elevator1.setPower(-1);
             } else if (this.gamepad1.dpad_down && this.gamepad1.b) {
@@ -64,6 +73,15 @@ public class Chassis extends LinearOpMode {
             } else {
                 elevator.elevator1.setPower(0);
                 elevator.elevator2.setPower(0);
+            }
+
+             */
+            if (this.gamepad1.dpad_up) {
+                elevator.goUp();
+            } else if (this.gamepad1.dpad_down) {
+                elevator.goDown();
+            } else {
+                elevator.stop();
             }
         }
     }
@@ -105,8 +123,8 @@ public class Chassis extends LinearOpMode {
         }
         chassis.arcadeDrive(this.gamepad1.left_stick_x,-this.gamepad1.left_stick_y,this.gamepad1.right_stick_x,speed,gyr);
 
-        if(this.gamepad1.right_bumper){
-            speed=baseSpeed*0.5;
+        if(this.gamepad1.right_trigger>0.1){
+            speed=baseSpeed*(1.4-this.gamepad1.right_trigger);
         }else{
             speed=baseSpeed;
         }
@@ -151,6 +169,7 @@ public class Chassis extends LinearOpMode {
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
         //ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
+        DroneLauncherSubsystem launcher = DroneLauncherSubsystem.getInstance(hardwareMap,telemetry);
         /////////////////////////////
         //orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -173,6 +192,13 @@ public class Chassis extends LinearOpMode {
             ArmMethods();
 
             telemetry.update();
+
+            if (this.gamepad1.y) {
+                //launcher.launch();
+            } else {
+                //launcher.reset();
+            }
+
 
         }
         /*

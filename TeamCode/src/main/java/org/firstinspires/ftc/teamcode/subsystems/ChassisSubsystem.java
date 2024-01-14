@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
+import org.opencv.core.Mat;
 
 import java.lang.Math;
 
@@ -74,6 +75,12 @@ public class ChassisSubsystem {
 
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
 
+        if(Math.abs(x)<0.15){
+            x=0;
+        }
+          if(Math.abs(y)<0.15){
+              y=0;
+          }
         //r is right stick x
           if(true) {
               lastDir = degrees;
