@@ -35,8 +35,8 @@ public class ArmSubsystem {
     public void showPositions(){
         telemetry.addData("servoL", servoL.getPosition());
         telemetry.addData("servoR", servoR.getPosition());
-        telemetry.addData("crservoL", crservoL.getPower());
-        telemetry.addData("crservoR", crservoR.getPower());
+        //telemetry.addData("crservoL", crservoL.getPower());
+        //telemetry.addData("crservoR", crservoR.getPower());
 
     }
     public void setZero(){

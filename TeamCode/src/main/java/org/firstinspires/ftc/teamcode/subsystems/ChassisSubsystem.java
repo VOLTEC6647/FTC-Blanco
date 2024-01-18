@@ -62,6 +62,15 @@ public class ChassisSubsystem {
         FrontRightMotor = hardwareMap.get(DcMotor.class, "FR");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "BL");
         BackRightMotor = hardwareMap.get(DcMotor.class, "BR");
+
+        //FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
     public void updateTargetAngle(){
         targetAngle = lastDir;
@@ -75,6 +84,15 @@ public class ChassisSubsystem {
 
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
 
+        telemetry.addData("targetAngle",targetAngle);
+        if(Math.abs(targetAngle-180)<20){
+            targetAngle=180;
+        }
+        if(Math.abs(targetAngle)<20){
+            targetAngle=0;
+        }
+
+
         if(Math.abs(x)<0.15){
             x=0;
         }
@@ -84,7 +102,7 @@ public class ChassisSubsystem {
         //r is right stick x
           if(true) {
               lastDir = degrees;
-              if (Math.abs(r)>0.1||System.currentTimeMillis() - timeOffset < 300) {
+              if (Math.abs(r)>0.1||(System.currentTimeMillis() - timeOffset < 500&&true)) {
 
                   telemetry.addData("target",targetAngle);
                   telemetry.addData("gyrro",degrees);
@@ -99,7 +117,7 @@ public class ChassisSubsystem {
                   telemetry.addData("angularError",angularError);
                   double angularThreshold = 10;
                   if(Math.abs(angularError)>angularThreshold){
-                      r=angularError*0.05;
+                      r=angularError*0.5;
                   }
               }
 

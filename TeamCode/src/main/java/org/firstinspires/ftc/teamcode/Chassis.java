@@ -36,7 +36,6 @@ public class Chassis extends LinearOpMode {
     boolean hasTarget=false;
     public double gyr;
 
-
     public ChassisSubsystem chassis;
 
     void ElevatorMethods(ElevatorSubsystem elevator){
@@ -93,15 +92,21 @@ public class Chassis extends LinearOpMode {
         if(this.gamepad1.back){
             if(this.gamepad1.a){
                 gyroscope.reset();
+                chassis.updateTargetAngle();
             }
 
         }
-        if(this.gamepad1.x){
-            chassis.FrontLeftMotor.setPower(1);
-        }else if(this.gamepad1.y){
-            chassis.FrontLeftMotor.setPower(-1);
+        if(this.gamepad1.y){
+            chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            chassis.FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            chassis.BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            chassis.BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         }else{
-            chassis.FrontLeftMotor.setPower(0);
+            chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            chassis.FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            chassis.BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            chassis.BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         if(this.gamepad1.start){
             if (this.gamepad1.dpad_up){
@@ -129,6 +134,16 @@ public class Chassis extends LinearOpMode {
             speed=baseSpeed;
         }
 
+        if(this.gamepad1.x){
+            if(this.gamepad1.back){
+                intake.setPower(-1);
+            }else {
+                intake.setPower(1);
+            }
+        }else{
+            intake.setPower(0);
+        }
+
 
     }
     void IMUMethods(){
@@ -137,19 +152,19 @@ public class Chassis extends LinearOpMode {
         //telemetry.addData("GyroY", AGyroscope.getY());
         telemetry.addData("Gyro", orientation.firstAngle);
 
-        if(this.gamepad1.a){
-            //intake.setPower(-1);
 
-        }else{
-            //intake.setPower(0);
-        }
         if(this.gamepad1.right_stick_button){
             //imu.resetYaw();
 
         }
     }
-    void ArmMethods(){
-
+    void ArmMethods(ArmSubsystem arm){
+        arm.showPositions();
+        if (this.gamepad1.b) {
+            arm.servoL.setPosition(90);
+        } else {
+            arm.setZero();
+        }
     }
 
     @Override
@@ -157,9 +172,8 @@ public class Chassis extends LinearOpMode {
         //this.telemetry = telemetry;
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         //imu = hardwareMap.get(IMU.class, "imu");
-        if(Parameters.robot=="marvin"){
-            intake = hardwareMap.get(DcMotor.class, "IntakeMotor");
-        }
+        intake = hardwareMap.get(DcMotor.class, "intake");
+
 
 
         telemetry.addData("Status", "Initialized");
@@ -167,7 +181,7 @@ public class Chassis extends LinearOpMode {
         ChassisSubsystem chassis=ChassisSubsystem.getInstance(hardwareMap,telemetry);
         ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
-        //ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
+        ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         DroneLauncherSubsystem launcher = DroneLauncherSubsystem.getInstance(hardwareMap,telemetry);
         /////////////////////////////
@@ -177,7 +191,7 @@ public class Chassis extends LinearOpMode {
 
         //telemetry.addData("GyroX", orientation.secondAngle);
         //telemetry.addData("GyroY", AndroidOrientation().getAngle().secondPosition());
-        telemetry.update();
+        ////telemetry.update();
 
         waitForStart();
 
@@ -189,7 +203,7 @@ public class Chassis extends LinearOpMode {
 
             ElevatorMethods(elevator);
 
-            ArmMethods();
+            ArmMethods(arm);
 
             telemetry.update();
 
