@@ -48,10 +48,10 @@ public class ElevatorSubsystem {
             this.elevator2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-
-
+        //elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    public void goUp(){
+    public void goDown(){
         if(-elevator1.getCurrentPosition()<maxzone) {
             elevator1.setPower(DebugSpeed);
             elevator2.setPower(-DebugSpeed);
@@ -60,7 +60,7 @@ public class ElevatorSubsystem {
             elevator2.setPower(-0.2);
         }
     }
-    public void goDown(){
+    public void goUp(){
         if (-elevator1.getCurrentPosition() > minzone) {
             elevator1.setPower(-DebugSpeed);
             elevator2.setPower(DebugSpeed);
@@ -73,6 +73,10 @@ public class ElevatorSubsystem {
     public void stop(){
         elevator1.setPower(0);
         elevator2.setPower(0);
+
+        elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         if((-elevator1.getCurrentPosition()<0||elevator2.getCurrentPosition()<0)){
             resetEncoders();
         }

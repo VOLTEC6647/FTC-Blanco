@@ -92,14 +92,12 @@ public class ChassisSubsystem {
             targetAngle=0;
         }
 
-
         if(Math.abs(x)<0.15){
             x=0;
         }
           if(Math.abs(y)<0.15){
               y=0;
           }
-        //r is right stick x
           if(true) {
               lastDir = degrees;
               if (Math.abs(r)>0.1||(System.currentTimeMillis() - timeOffset < 500&&true)) {

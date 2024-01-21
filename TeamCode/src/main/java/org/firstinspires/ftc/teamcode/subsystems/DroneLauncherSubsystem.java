@@ -16,21 +16,24 @@ public class DroneLauncherSubsystem {
     private static DroneLauncherSubsystem instance;
     public static DroneLauncherSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry) {
         if (instance == null) {
-            instance = new DroneLauncherSubsystem(hardwareMap);
+            instance = new DroneLauncherSubsystem(hardwareMap,telemetry);
         }
         return instance;
 
     }
-
-    public DroneLauncherSubsystem(HardwareMap hardwareMap){
+    public DroneLauncherSubsystem(HardwareMap hardwareMap,Telemetry telemetry){
         launcher = hardwareMap.get(Servo.class, "launcher");
         this.telemetry=telemetry;
+
     }
+
+
     public void launch(){
         launcher.setPosition(launcher.MIN_POSITION);
         telemetry.addData("launcher",launcher.getPosition());
     }
     public void reset(){launcher.setPosition(launcher.MAX_POSITION);
     telemetry.addData("launcher",launcher.getPosition());
+
     }
 }

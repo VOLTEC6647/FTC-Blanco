@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 
@@ -26,7 +27,10 @@ import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 @TeleOp
 
 public class Chassis extends LinearOpMode {
-
+    
+    public static Gamepad controller1;
+    public static Gamepad controller2;
+    
     private Blinker control_Hub;
     private double speed=1;
     private IMU imu;
@@ -36,37 +40,34 @@ public class Chassis extends LinearOpMode {
     boolean hasTarget=false;
     public double gyr;
 
+    private boolean mix = true;
+
     public ChassisSubsystem chassis;
 
     void ElevatorMethods(ElevatorSubsystem elevator){
         /*
-        if(this.gamepad1.right_trigger>0.1){
-            elevator.goUp(this.gamepad1.right_trigger);
-        }else if(this.gamepad1.left_trigger<0.1){
-            elevator.goDown(this.gamepad1.left_trigger);
+        if(controller1.right_trigger>0.1){
+            elevator.goUp(controller1.right_trigger);
+        }else if(controller1.left_trigger<0.1){
+            elevator.goDown(controller1.left_trigger);
         }
         */
-        if(this.gamepad1.left_trigger>0.3){
-            elevator.DebugSpeed = 1.4-this.gamepad1.left_trigger;
-        }
-        else{
-            elevator.DebugSpeed = 1;
-        }
+
         elevator.getPosition(telemetry);
-        if(!this.gamepad1.start) {
+        if(!controller2.start) {
             /*
-            if (this.gamepad1.dpad_up && this.gamepad1.b) {
+            if (controller1.dpad_up && controller1.b) {
                 elevator.elevator1.setPower(-1);
-            } else if (this.gamepad1.dpad_down && this.gamepad1.b) {
+            } else if (controller1.dpad_down && controller1.b) {
                 elevator.elevator1.setPower(1);
-            } else if (this.gamepad1.dpad_up && this.gamepad1.a) {
+            } else if (controller1.dpad_up && controller1.a) {
                 elevator.elevator1.setPower(-1);
-            } else if (this.gamepad1.dpad_down && this.gamepad1.a) {
+            } else if (controller1.dpad_down && controller1.a) {
                 elevator.elevator1.setPower(1);
-            } else if (this.gamepad1.dpad_up) {
+            } else if (controller1.dpad_up) {
                 elevator.elevator2.setPower(-1);
                 elevator.elevator1.setPower(-1);
-            } else if (this.gamepad1.dpad_down) {
+            } else if (controller1.dpad_down) {
                 elevator.elevator2.setPower(1);
                 elevator.elevator1.setPower(1);
             } else {
@@ -75,11 +76,14 @@ public class Chassis extends LinearOpMode {
             }
 
              */
-            if (this.gamepad1.dpad_up) {
-                elevator.goUp();
-            } else if (this.gamepad1.dpad_down) {
-                elevator.goDown();
-            } else {
+            if(Math.abs(controller2.right_stick_y)>0.3) {
+                elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
+                if (controller2.right_stick_y > 0.3) {
+                    elevator.goUp();
+                } else if (controller2.right_stick_y < -0.3) {
+                    elevator.goDown();
+                }
+            }else {
                 elevator.stop();
             }
         }
@@ -89,14 +93,14 @@ public class Chassis extends LinearOpMode {
         gyr = gyroscope.getRotation();
         //gyr=0;
         telemetry.addData("gyr",gyr);
-        if(this.gamepad1.back){
-            if(this.gamepad1.a){
+        if(controller1.back){
+            if(controller1.a){
                 gyroscope.reset();
                 chassis.updateTargetAngle();
             }
 
         }
-        if(this.gamepad1.y){
+        if(controller1.y){
             chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             chassis.FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             chassis.BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -108,34 +112,34 @@ public class Chassis extends LinearOpMode {
             chassis.BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             chassis.BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
-        if(this.gamepad1.start){
-            if (this.gamepad1.dpad_up){
+        if(controller1.start){
+            if (controller1.dpad_up){
                 gyroscope.setOffset(180);
                 chassis.updateTargetAngle();
             }
-            if (this.gamepad1.dpad_right){
+            if (controller1.dpad_right){
                 gyroscope.setOffset(270);
                 chassis.updateTargetAngle();
             }
-            if (this.gamepad1.dpad_down){
+            if (controller1.dpad_down){
                 gyroscope.setOffset(0);
                 chassis.updateTargetAngle();
             }
-            if (this.gamepad1.dpad_left){
+            if (controller1.dpad_left){
                 gyroscope.setOffset(90);
                 chassis.updateTargetAngle();
             }
         }
-        chassis.arcadeDrive(this.gamepad1.left_stick_x,-this.gamepad1.left_stick_y,this.gamepad1.right_stick_x,speed,gyr);
+        chassis.arcadeDrive(controller1.left_stick_x,-controller1.left_stick_y,controller1.right_stick_x,speed,gyr);
 
-        if(this.gamepad1.right_trigger>0.1){
-            speed=baseSpeed*(1.4-this.gamepad1.right_trigger);
+        if(controller1.right_trigger>0.1){
+            speed=baseSpeed*(1.4-controller1.right_trigger);
         }else{
             speed=baseSpeed;
         }
 
-        if(this.gamepad1.x){
-            if(this.gamepad1.back){
+        if(controller2.x){
+            if(controller1.back){
                 intake.setPower(-1);
             }else {
                 intake.setPower(1);
@@ -153,18 +157,35 @@ public class Chassis extends LinearOpMode {
         telemetry.addData("Gyro", orientation.firstAngle);
 
 
-        if(this.gamepad1.right_stick_button){
+        if(controller1.right_stick_button){
             //imu.resetYaw();
 
         }
     }
     void ArmMethods(ArmSubsystem arm){
-        arm.showPositions();
-        if (this.gamepad1.b) {
-            arm.servoL.setPosition(90);
-        } else {
-            arm.setZero();
+
+        if(!controller2.start){
+            if (controller2.dpad_right) {
+                arm.setPosition(0.5);
+                arm.updateArm();
+            } else if(controller2.dpad_left) {
+                arm.setZero();
+                arm.updateArm();
+            }
         }
+
+        if (controller2.right_bumper) {
+            arm.open();
+        } else if(controller2.left_bumper) {
+            arm.close();
+        }
+        if (arm.servoDelta.seconds()>0.5){
+            arm.servoDelta.reset();
+            arm.showPositions();
+
+        }
+        telemetry.addData("angle", arm.angle);
+
     }
 
     @Override
@@ -175,6 +196,7 @@ public class Chassis extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
 
 
+        //control_Hub.setConstant(3);
 
         telemetry.addData("Status", "Initialized");
         /////////////////////////////
@@ -193,11 +215,28 @@ public class Chassis extends LinearOpMode {
         //telemetry.addData("GyroY", AndroidOrientation().getAngle().secondPosition());
         ////telemetry.update();
 
+
+        launcher.reset();
+
         waitForStart();
+
+        chassis.updateTargetAngle();
+
+        arm.setZero();
+        arm.updateArm();
 
         //arm.setZero();
 
+        controller1 = this.gamepad1;
+        controller2 = this.gamepad2;
+
+        if(this.gamepad2.start&this.gamepad2.back){
+            controller1=this.gamepad2;
+        }
+
         while(opModeIsActive()) {
+
+
 
             ChassisMethods(chassis,gyroscope);
 
@@ -207,10 +246,10 @@ public class Chassis extends LinearOpMode {
 
             telemetry.update();
 
-            if (this.gamepad1.y) {
-                //launcher.launch();
+            if (controller2.y) {
+                launcher.launch();
             } else {
-                //launcher.reset();
+                launcher.reset();
             }
 
 
