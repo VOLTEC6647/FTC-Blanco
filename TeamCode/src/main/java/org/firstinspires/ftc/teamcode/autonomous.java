@@ -33,7 +33,7 @@ public class autonomous extends LinearOpMode {
     public double gyr;
     @Override
     public void runOpMode() {
-        //this.telemetry = telemetry;
+
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         //imu = hardwareMap.get(IMU.class, "imu");
         if (Parameters.robot == "marvin") {
@@ -41,18 +41,13 @@ public class autonomous extends LinearOpMode {
         }
 
         openCVSubsystem = OpenCVSubsystem.getInstance(hardwareMap);
-        aprilTagSubsystem = AprilTagSubsystem.getInstance(hardwareMap,telemetry);
-        chassisSubsystem = ChassisSubsystem.getInstance(hardwareMap,telemetry);
-        gyroscopeSubsystem = GyroscopeSubsystem.getInstance(hardwareMap);
+        //aprilTagSubsystem = AprilTagSubsystem.getInstance(hardwareMap,telemetry);
+        //chassisSubsystem = ChassisSubsystem.getInstance(hardwareMap,telemetry);
+        //gyroscopeSubsystem = GyroscopeSubsystem.getInstance(hardwareMap);
         //elevatorSubsystem = ElevatorSubsystem.getInstance(hardwareMap);
         //odometrySubsystem = OdometrySubsystem.getInstance(hardwareMap, chassisSubsystem);
-
         waitForStart();
-        while (opModeIsActive()) {
 
-            telemetry.addData("Status", "Running");
-            //telemetry.addData("Width: ", openCVSubsystem.width);
-            telemetry.update();
-        }
+
     }
 }
