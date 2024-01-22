@@ -164,6 +164,9 @@ public class Chassis extends LinearOpMode {
     }
     void ArmMethods(ArmSubsystem arm){
 
+        arm.going_down =Chassis.controller2.left_stick_y < -0.2;
+        arm.going_down = false;
+
         if(!controller2.start){
             if (controller2.dpad_right) {
                 arm.setPosition(0.5);

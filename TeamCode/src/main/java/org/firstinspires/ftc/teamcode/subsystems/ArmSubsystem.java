@@ -28,6 +28,8 @@ public class ArmSubsystem {
 
     private boolean outside = false;
 
+    public boolean going_down = false;
+
     public ElapsedTime servoDelta= new ElapsedTime();
 
 
@@ -64,7 +66,7 @@ public class ArmSubsystem {
     }
 
     public void updateArm(){
-        if(Chassis.controller2.left_stick_y < -0.3){
+        if(going_down){
             servoL.setPosition(angle-0.3);
             servoR.setPosition(servoR.MAX_POSITION-angle+0.3);
         }else{
