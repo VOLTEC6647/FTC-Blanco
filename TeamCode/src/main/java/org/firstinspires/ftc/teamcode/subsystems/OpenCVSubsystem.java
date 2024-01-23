@@ -66,7 +66,7 @@ public class OpenCVSubsystem {
 
     public static class PropDetectionPipeline extends OpenCvPipeline{
         Mat mat = new Mat();
-        Mat sleke = new Mat();
+        Mat slek = new Mat();
         Moments moment = new Moments();
         Mat bgrImage = new Mat();
 
