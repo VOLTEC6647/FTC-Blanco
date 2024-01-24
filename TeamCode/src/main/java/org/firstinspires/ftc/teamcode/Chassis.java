@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -11,9 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
@@ -24,7 +27,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 public class Chassis extends LinearOpMode {
 
     private Blinker control_Hub;
-    private double speed = 1;
+    private double speed=1;
     private IMU imu;
     private double baseSpeed=0.5;
     private Orientation orientation;
@@ -136,7 +139,7 @@ public class Chassis extends LinearOpMode {
         //this.telemetry = telemetry;
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         //imu = hardwareMap.get(IMU.class, "imu");
-        if (Parameters.robot == "marvin") {
+        if(Parameters.robot=="marvin"){
             intake = hardwareMap.get(DcMotor.class, "IntakeMotor");
         }
 

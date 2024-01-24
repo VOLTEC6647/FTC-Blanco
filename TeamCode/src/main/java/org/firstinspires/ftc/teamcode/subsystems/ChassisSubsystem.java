@@ -11,7 +11,9 @@ import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Chassis;
+import org.firstinspires.ftc.teamcode.info;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
+import org.opencv.core.Mat;
 
 import java.lang.Math;
 
@@ -61,6 +63,15 @@ public class ChassisSubsystem {
         FrontRightMotor = hardwareMap.get(DcMotor.class, "FR");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "BL");
         BackRightMotor = hardwareMap.get(DcMotor.class, "BR");
+
+        //FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
     public void updateTargetAngle(){
         targetAngle = lastDir;
@@ -74,10 +85,23 @@ public class ChassisSubsystem {
 
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
 
-        //r is right stick x
+        telemetry.addData("targetAngle",targetAngle);
+        if(Math.abs(targetAngle-180)<20){
+            targetAngle=180;
+        }
+        if(Math.abs(targetAngle)<20){
+            targetAngle=0;
+        }
+
+        if(Math.abs(x)<0.15){
+            x=0;
+        }
+          if(Math.abs(y)<0.15){
+              y=0;
+          }
           if(true) {
               lastDir = degrees;
-              if (Math.abs(r)>0.1||System.currentTimeMillis() - timeOffset < 300) {
+              if (Math.abs(r)>0.1||(System.currentTimeMillis() - timeOffset < 500&&true)) {
 
                   telemetry.addData("target",targetAngle);
                   telemetry.addData("gyrro",degrees);
@@ -92,7 +116,7 @@ public class ChassisSubsystem {
                   telemetry.addData("angularError",angularError);
                   double angularThreshold = 10;
                   if(Math.abs(angularError)>angularThreshold){
-                      r=angularError*0.05;
+                      r=angularError*0.5;
                   }
               }
 
@@ -128,13 +152,25 @@ public class ChassisSubsystem {
         telemetry.addData("pi", Math.PI);
         //x = Math.cos(0.7) * x - Math.sin(0.7) * y; // cos(°) sin(°)
         //y = Math.cos(0.7) * x + Math.sin(0.7) * y;
-        frontRightPower = 0;
-        backLeftPower = 0;
-        frontLeftPower = 0;
-        backRightPower = 0;
-        if (Parameters.robot == "marvin") {
-            frontLeftPower=-speed*(y + x - r);
-        } else {
+        frontRightPower=0;
+        backLeftPower=0;
+        frontLeftPower=0;
+        backRightPower=0;
+
+
+          backLeftPower = speed*(x - y - r);
+          backRightPower = speed*(y + x - r);
+          frontRightPower =  speed*(y - x - r);
+          frontLeftPower= -(y + x + r)*speed;
+
+
+        if(info.name=="rev"){
+            frontLeftPower=-speed*(y - x + r);
+            backLeftPower = -speed*(y + x + r);
+
+            backRightPower = -speed*(y + x - r);
+            frontRightPower =  -speed*(y - x - r);
+        }else{
 
         }
         // = /*-*/speed*(y + x - r);
@@ -142,16 +178,14 @@ public class ChassisSubsystem {
 
 
 
-        if(Parameters.robot=="marvin"){
-            backLeftPower = -speed*(y - x - r);
+        if(info.name=="rev"){
+            telemetry.addData("NotRobot","Rev");
+            //backLeftPower = -speed*(y - x - r);
         }else{
 
         }
 
-        backLeftPower = speed*(x - y - r);
-        backRightPower = speed*(y + x - r);
-        frontRightPower =  speed*(y - x - r);
-        frontLeftPower= -(y + x + r)*speed;
+
 
 
         setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
