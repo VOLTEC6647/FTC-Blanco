@@ -11,7 +11,7 @@ public class PivotSubsystem {
     public Servo servoClaw;
     private Telemetry telemetry;
 
-    private final double CLAW_OPEN = 0.3;
+    private double CLAW_OPEN = 0.3;
     private final double CLAW_CLOSE = 0;
     private final double PIVOT_UP = 0;
 
@@ -21,6 +21,8 @@ public class PivotSubsystem {
         this.servoClaw = hardwareMap.get(Servo.class, "claw");
         this.servoPivot = hardwareMap.get(Servo.class, "pivot");
         this.telemetry = telemetry;
+
+        this.CLAW_OPEN = 90;
     }
 
     public static PivotSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry) {

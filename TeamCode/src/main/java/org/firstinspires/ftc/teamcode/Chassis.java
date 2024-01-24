@@ -171,19 +171,35 @@ public class Chassis extends LinearOpMode {
         }
 
 
-        if(info.name=="rev") {
 
-        }else {
             if(!controller2.start){
                 if (controller2.dpad_right) {
-                    arm.setPosition(0.5);
-                    arm.updateArm();
+                    if(info.name=="gobilda") {
+                        arm.setPosition(0.5);
+                        arm.updateArm();
+                    }else {
+                        pivot.up();
+                    }
+
                 } else if(controller2.dpad_left) {
-                    arm.setZero();
-                    arm.updateArm();
+                    if(info.name=="gobilda") {
+                        arm.setZero();
+                        arm.updateArm();
+                    }else {
+                        pivot.down();
+                    }
+
+                }else if(controller2.dpad_up){
+                    if(info.name=="gobilda") {
+                        arm.setPosition(0.7);
+                        arm.updateArm();
+                    }else {
+
+                    }
+
                 }
             }
-        }
+
         if (controller2.right_bumper) {
             if(info.name=="rev"){
                 pivot.open();
@@ -223,7 +239,7 @@ public class Chassis extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         /////////////////////////////
         ChassisSubsystem chassis=ChassisSubsystem.getInstance(hardwareMap,telemetry);
-        ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
+        ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap,telemetry);
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         DroneLauncherSubsystem launcher = DroneLauncherSubsystem.getInstance(hardwareMap,telemetry);
@@ -266,6 +282,10 @@ public class Chassis extends LinearOpMode {
         }
 
         while(opModeIsActive()) {
+
+            if(this.gamepad2.start&this.gamepad2.back&this.gamepad2.y){
+                controller1=this.gamepad2;
+            }
 
             ChassisMethods(chassis,gyroscope);
 
