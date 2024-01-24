@@ -52,7 +52,7 @@ public class ElevatorSubsystem {
         //elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void goDown(){
-        if(-elevator1.getCurrentPosition()<maxzone) {
+        if(true||-elevator1.getCurrentPosition() > minzone) {
             elevator1.setPower(DebugSpeed);
             elevator2.setPower(-DebugSpeed);
         }else{
@@ -61,7 +61,7 @@ public class ElevatorSubsystem {
         }
     }
     public void goUp(){
-        if (-elevator1.getCurrentPosition() > minzone) {
+        if (true||-elevator1.getCurrentPosition()<maxzone) {
             elevator1.setPower(-DebugSpeed);
             elevator2.setPower(DebugSpeed);
         } else {

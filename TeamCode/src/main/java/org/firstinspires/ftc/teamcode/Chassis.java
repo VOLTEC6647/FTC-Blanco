@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
+import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
 
 
 @TeleOp
@@ -140,9 +141,9 @@ public class Chassis extends LinearOpMode {
 
         if(controller2.x){
             if(controller1.back){
-                intake.setPower(-1);
+                intake.setPower(-0.7);
             }else {
-                intake.setPower(1);
+                intake.setPower(0.7);
             }
         }else{
             intake.setPower(0);
@@ -162,32 +163,50 @@ public class Chassis extends LinearOpMode {
 
         }
     }
-    void ArmMethods(ArmSubsystem arm){
+    void ArmMethods(ArmSubsystem arm, PivotSubsystem pivot){
 
-        arm.going_down =Chassis.controller2.left_stick_y < -0.2;
-        arm.going_down = false;
+        if(info.name=="gobilda"){
+            arm.going_down =Chassis.controller2.left_stick_y < -0.2;
+            arm.going_down = false;
+        }
 
-        if(!controller2.start){
-            if (controller2.dpad_right) {
-                arm.setPosition(0.5);
-                arm.updateArm();
-            } else if(controller2.dpad_left) {
-                arm.setZero();
-                arm.updateArm();
+
+        if(info.name=="rev") {
+
+        }else {
+            if(!controller2.start){
+                if (controller2.dpad_right) {
+                    arm.setPosition(0.5);
+                    arm.updateArm();
+                } else if(controller2.dpad_left) {
+                    arm.setZero();
+                    arm.updateArm();
+                }
             }
         }
-
         if (controller2.right_bumper) {
-            arm.open();
-        } else if(controller2.left_bumper) {
-            arm.close();
-        }
-        if (arm.servoDelta.seconds()>0.5){
-            arm.servoDelta.reset();
-            arm.showPositions();
+            if(info.name=="rev"){
+                pivot.open();
+            }else{
+                arm.open();
+            }
 
+        } else if(controller2.left_bumper) {
+            if(info.name=="rev"){
+                pivot.close();
+            }else{
+                arm.close();
+            }
         }
-        telemetry.addData("angle", arm.angle);
+        if(info.name=="gobilda") {
+            if (arm.servoDelta.seconds() > 0.5) {
+                arm.servoDelta.reset();
+                arm.showPositions();
+
+            }
+            telemetry.addData("angle", arm.angle);
+        }
+
 
     }
 
@@ -206,9 +225,15 @@ public class Chassis extends LinearOpMode {
         ChassisSubsystem chassis=ChassisSubsystem.getInstance(hardwareMap,telemetry);
         ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
-        ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         DroneLauncherSubsystem launcher = DroneLauncherSubsystem.getInstance(hardwareMap,telemetry);
+        PivotSubsystem pivot = null;
+        ArmSubsystem arm = null;
+        if(info.name=="rev") {
+            pivot = PivotSubsystem.getInstance(hardwareMap, telemetry);
+        }else{
+            arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
+        }
         /////////////////////////////
         //orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -225,8 +250,11 @@ public class Chassis extends LinearOpMode {
 
         chassis.updateTargetAngle();
 
-        arm.setZero();
-        arm.updateArm();
+        if(info.name=="gobilda"){
+            arm.setZero();
+            arm.updateArm();
+        }
+
 
         //arm.setZero();
 
@@ -239,13 +267,11 @@ public class Chassis extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-
-
             ChassisMethods(chassis,gyroscope);
 
             ElevatorMethods(elevator);
 
-            ArmMethods(arm);
+            ArmMethods(arm,pivot);
 
             telemetry.update();
 

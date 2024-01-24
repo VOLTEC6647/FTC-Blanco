@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Chassis;
+import org.firstinspires.ftc.teamcode.info;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 import org.opencv.core.Mat;
 
@@ -155,8 +156,20 @@ public class ChassisSubsystem {
         backLeftPower=0;
         frontLeftPower=0;
         backRightPower=0;
-        if(Parameters.robot=="marvin"){
-            frontLeftPower=-speed*(y + x - r);
+
+
+          backLeftPower = speed*(x - y - r);
+          backRightPower = speed*(y + x - r);
+          frontRightPower =  speed*(y - x - r);
+          frontLeftPower= -(y + x + r)*speed;
+
+
+        if(info.name=="rev"){
+            frontLeftPower=-speed*(y - x + r);
+            backLeftPower = -speed*(y + x + r);
+
+            backRightPower = -speed*(y + x - r);
+            frontRightPower =  -speed*(y - x - r);
         }else{
 
         }
@@ -165,16 +178,14 @@ public class ChassisSubsystem {
 
 
 
-        if(Parameters.robot=="marvin"){
-            backLeftPower = -speed*(y - x - r);
+        if(info.name=="rev"){
+            telemetry.addData("NotRobot","Rev");
+            //backLeftPower = -speed*(y - x - r);
         }else{
 
         }
 
-        backLeftPower = speed*(x - y - r);
-        backRightPower = speed*(y + x - r);
-        frontRightPower =  speed*(y - x - r);
-        frontLeftPower= -(y + x + r)*speed;
+
 
 
         setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
