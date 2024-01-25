@@ -27,10 +27,14 @@ public class GyroscopeSubsystem {
     public double getRotation(){
         return navx.getYaw()+offset;
     }
+    public double robotYaw() {
+        return navx.getYaw();
+    }
 
     public void reset(){
         navx.zeroYaw();
     }
+
     public void setOffset(int degrees){
         offset = degrees;
     }

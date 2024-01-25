@@ -51,27 +51,27 @@ public class ChassisSubsystem {
 
     public ChassisSubsystem(HardwareMap hardwareMap, Telemetry telemetry){
         this.hardwareMap=hardwareMap;
+        this.telemetry = telemetry;
         /*
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "BackRightMotor");//
         FrontRightMotor = hardwareMap.get(DcMotor.class, "BackLeftMotor");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "FrontRightMotor");
         BackRightMotor = hardwareMap.get(DcMotor.class, "FrontLeftMotor");
         */
-        this.telemetry=telemetry;
         
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "FL");//
         FrontRightMotor = hardwareMap.get(DcMotor.class, "FR");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "BL");
         BackRightMotor = hardwareMap.get(DcMotor.class, "BR");
 
-        //FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        //FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        //BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        //BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
     public void updateTargetAngle(){
         targetAngle = lastDir;
@@ -81,6 +81,33 @@ public class ChassisSubsystem {
           instance = new ChassisSubsystem(hardwareMap,telemetry);
         }
         return instance;
+      }
+      public void moveY(double speed) {
+
+          frontLeftPower= -speed*(1);
+          backLeftPower = -speed*(1);
+          backRightPower = -speed*(1);
+          frontRightPower =  -speed*(1);
+
+          setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+      }
+
+      public void moveX(double speed) {
+          frontLeftPower= speed*(1);
+          backLeftPower = -speed*(1);
+          backRightPower = -speed*(1);
+          frontRightPower =  speed*(1);
+
+          setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+      }
+
+      public void moveR(double speed) {
+          frontLeftPower= -speed*(1);
+          backLeftPower = -speed*(1);
+          backRightPower = speed*(1);
+          frontRightPower = speed*(1);
+
+          setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
       }
 
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
@@ -113,11 +140,15 @@ public class ChassisSubsystem {
 
               }else{
                   angularError = calculateRotation((int) degrees, (int) targetAngle);
+                  final double KPPP = 0.03;
+                  double errror = targetAngle - degrees;
+                  double speeed = errror * KPPP;
+
                   telemetry.addData("angularError",angularError);
                   double angularThreshold = 10;
-                  if(Math.abs(angularError)>angularThreshold){
-                      r=angularError*0.5;
-                  }
+                  //if(Math.abs(angularError)>angularThreshold) {
+                  //}
+                  r = speeed;
               }
 
           }
@@ -165,7 +196,7 @@ public class ChassisSubsystem {
 
 
         if(info.name=="rev"){
-            frontLeftPower=-speed*(y - x + r);
+            frontLeftPower= -speed*(y - x + r);
             backLeftPower = -speed*(y + x + r);
 
             backRightPower = -speed*(y + x - r);
@@ -173,10 +204,6 @@ public class ChassisSubsystem {
         }else{
 
         }
-        // = /*-*/speed*(y + x - r);
-
-
-
 
         if(info.name=="rev"){
             telemetry.addData("NotRobot","Rev");
@@ -184,9 +211,6 @@ public class ChassisSubsystem {
         }else{
 
         }
-
-
-
 
         setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
 

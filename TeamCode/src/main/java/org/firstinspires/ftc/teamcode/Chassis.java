@@ -16,10 +16,10 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
+import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
 
 
 @TeleOp
@@ -134,13 +134,14 @@ public class Chassis extends LinearOpMode {
 
     }
 
+
     @Override
     public void runOpMode() {
         //this.telemetry = telemetry;
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         //imu = hardwareMap.get(IMU.class, "imu");
         if(Parameters.robot=="marvin"){
-            intake = hardwareMap.get(DcMotor.class, "IntakeMotor");
+            intake = hardwareMap.get(DcMotor.class, "intake");
         }
 
 
@@ -151,7 +152,8 @@ public class Chassis extends LinearOpMode {
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
         //ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
-        /////////////////////////////
+        PivotSubsystem pivot = PivotSubsystem.getInstance(hardwareMap, telemetry);/////////////////////////////
+
         //orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         //GyroscopeSubsystem gyroscope=GyroscopeSubsystem.getInstance();
@@ -171,6 +173,8 @@ public class Chassis extends LinearOpMode {
             ElevatorMethods(elevator);
 
             ArmMethods();
+
+            pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.left_bumper, this.gamepad2.right_bumper);
 
             telemetry.update();
 

@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Chassis;
 
+import javax.crypto.spec.DESedeKeySpec;
+
 public class ArmSubsystem {
     private static ArmSubsystem instance;
     public Servo servoL;
@@ -40,8 +42,8 @@ public class ArmSubsystem {
         return instance;
     }
     public ArmSubsystem(HardwareMap hardwareMap, Telemetry telemetry){
-        this.servoL=hardwareMap.get(Servo.class, "servoL");
-        this.servoR=hardwareMap.get(Servo.class, "servoR");
+        //this.servoL=hardwareMap.get(Servo.class, "servoL");
+        //this.servoR=hardwareMap.get(Servo.class, "servoR");
         this.claw=hardwareMap.get(Servo.class, "claw");
         this.axis=hardwareMap.get(Servo.class, "axis");
         //this.crservoL=hardwareMap.get(CRServo.class, "crservoL");
@@ -51,20 +53,29 @@ public class ArmSubsystem {
     }
 
     public void showPositions(){
-        telemetry.addData("servoLl", servoL.getPosition());
-        telemetry.addData("servoRr", servoR.getPosition());
+        //telemetry.addData("servoLl", servoL.getPosition());
+        //telemetry.addData("servoRr", servoR.getPosition());
         //telemetry.addData("crservoL", crservoL.getPower());
         //telemetry.addData("crservoR", crservoR.getPower());
+        telemetry.addData("Axis: ", axis.getPosition());
+        telemetry.addData("Claw: ", claw.getPosition());
 
     }
     public void setZero(){
         angle=0.07;
     }
 
-    public void setPosition(double position){
-        angle=position;
-    }
+    //public void setPosition(double position){
+    //    angle=position;
+    //}
 
+    public void setPosition(int desiredPosition) {
+        if (desiredPosition == 1) {
+            axis.setPosition(1);
+        } else if (desiredPosition == 0) {
+            axis.setPosition(0);
+        }
+    }
     public void updateArm(){
         if(going_down){
             servoL.setPosition(angle-0.3);
@@ -73,6 +84,7 @@ public class ArmSubsystem {
             servoL.setPosition(angle);
             servoR.setPosition(servoR.MAX_POSITION-angle);
         }
+
 
         updateAxis();
     }

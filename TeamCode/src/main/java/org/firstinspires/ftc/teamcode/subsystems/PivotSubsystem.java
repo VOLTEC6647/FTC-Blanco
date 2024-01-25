@@ -11,11 +11,11 @@ public class PivotSubsystem {
     public Servo servoClaw;
     private Telemetry telemetry;
 
-    private final double CLAW_OPEN = 0.3;
+    private final double CLAW_OPEN = 1;
     private final double CLAW_CLOSE = 0;
-    private final double PIVOT_UP = 0;
+    private final double PIVOT_UP = 1;
 
-    private final double PIVOT_DOWN = 0.5;
+    private final double PIVOT_DOWN = 0;
 
     public PivotSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.servoClaw = hardwareMap.get(Servo.class, "claw");
@@ -47,12 +47,20 @@ public class PivotSubsystem {
         servoPivot.setPosition(PIVOT_DOWN);
     }
 
+    public void pivotControls(boolean buttonA, boolean buttonB, boolean leftBumper, boolean rightBumper) {
+        if (buttonA) {
+            up();
+        } else if (buttonB) {
+            down();
+        } else if (leftBumper) {
+            open();
+        } else if (rightBumper) {
+            close();
+        }
+    }
     public void printPositions() {
         telemetry.addData("claw", servoClaw.getPosition());
         telemetry.addData("pivot", servoPivot.getPosition());
         telemetry.update();
     }
-
-
-
 }

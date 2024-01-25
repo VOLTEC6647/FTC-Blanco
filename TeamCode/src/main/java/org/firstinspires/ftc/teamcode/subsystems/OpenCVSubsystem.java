@@ -19,13 +19,15 @@ import java.util.List;
 
 public class OpenCVSubsystem {
 
-    public static HardwareMap hardwareMap;
-    public static  Telemetry telemetry;
+
+    public HardwareMap hardwareMap;
+    public  Telemetry telemetry;
     public OpenCVSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
-        OpenCVSubsystem.hardwareMap = hardwareMap;
+        this.hardwareMap = hardwareMap;
         initOpenCV();
+        this.telemetry=telemetry;
     }
-    public static OpenCVSubsystem getInstance(HardwareMap hardwareMap){
+    public static OpenCVSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry){
         OpenCVSubsystem instance = new OpenCVSubsystem(hardwareMap, telemetry);
         if (instance == null) {
         }
@@ -61,15 +63,15 @@ public class OpenCVSubsystem {
         //controlHubCam.openCameraDevice();
         //telemetry.addLine("Waiting for start");
         //telemetry.update();
-
     }
+    public static double cx;
+    public static double cy;
 
-    public static class PropDetectionPipeline extends OpenCvPipeline{
+    public class PropDetectionPipeline extends OpenCvPipeline{
         Mat mat = new Mat();
         Mat sleek = new Mat();
         Moments moment = new Moments();
         Mat bgrImage = new Mat();
-
 
         @Override
         public Mat processFrame(Mat input){
@@ -84,17 +86,43 @@ public class OpenCVSubsystem {
             //Mat[] hsvChannels = new Mat[3];
             //Core.split(mat, Arrays.asList(hsvChannels));
             moment = Imgproc.moments(mat);
-            double cx = moment.get_m10()/moment.get_m00();
-            double cy = moment.get_m01()/moment.get_m00();
+            OpenCVSubsystem.cx = moment.get_m10()/moment.get_m00();
+            OpenCVSubsystem.cy = moment.get_m01()/moment.get_m00();
             Point centroid = new Point(cx,cy);
             Imgproc.cvtColor(mat,bgrImage, Imgproc.COLOR_GRAY2RGB);
             Imgproc.line(bgrImage,centroid,centroid,new Scalar(0,255,0),10);
             //Imgproc.rectangle(input
-              //  new Point(input.cols()/4,));
+            //  new Point(input.cols()/4,));
             return bgrImage;
         }
+
     }
 
+    final int LEFTSIDE = 1;
+    final int CENTERSIDE = 2;
+    final int RIGHTSIDE = 3;
 
+    public int findObjectSide() {
+        int side = 0;
+        if (getcx() < 220) {
+            side = LEFTSIDE;
+            controlHubCam.stopStreaming();
+        } else if (getcx() > 220 && getcx() < 440) {
+            side = CENTERSIDE;
+            controlHubCam.stopStreaming();
+        } else if (getcx() > 440) {
+            side = RIGHTSIDE;
+            controlHubCam.stopStreaming();
+        }
+
+        return side;
+    }
+    public double getcx() {
+        return cx;
+    }
+
+    public double getcy() {
+        return cy;
+    }
 
 }
