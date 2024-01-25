@@ -79,11 +79,10 @@ public class Chassis extends LinearOpMode {
              */
             if(Math.abs(controller2.right_stick_y)>0.3) {
                 elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
-                telemetry.addData("lsthikkk",controller2.right_stick_y);
                 if (controller2.right_stick_y > 0.3) {
-                    elevator.goDown();
-                } else if (controller2.right_stick_y < -0.3) {
                     elevator.goUp();
+                } else if (controller2.right_stick_y < -0.3) {
+                    elevator.goDown();
                 }
             }else {
                 elevator.stop();
@@ -102,7 +101,7 @@ public class Chassis extends LinearOpMode {
             }
 
         }
-        if(controller1.y){
+        if(controller1.y&&false){
             chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             chassis.FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             chassis.BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -171,37 +170,35 @@ public class Chassis extends LinearOpMode {
             arm.going_down = false;
         }
 
+        if(!controller2.start){
+            if (controller2.dpad_right) {
+                if(info.name=="gobilda") {
+                    arm.setPosition(0.5);
+                    arm.updateArm();
+                }else {
+                    pivot.up();
+                }
 
-
-            if(!controller2.start){
-                if (controller2.dpad_right) {
-                    if(info.name=="gobilda") {
-                        arm.setPosition(0.5);
+            } else if(controller2.dpad_left) {
+                if(info.name=="gobilda") {
+                    if(!arm.open){
+                        arm.setZero();
                         arm.updateArm();
-                    }else {
-                        pivot.up();
                     }
+                }else {
+                    pivot.down();
+                }
 
-                } else if(controller2.dpad_left) {
-                    if(info.name=="gobilda") {
-                        if(!arm.open){
-                            arm.setZero();
-                            arm.updateArm();
-                        }
-                    }else {
-                        pivot.down();
-                    }
-
-                }else if(controller2.dpad_up){
-                    if(info.name=="gobilda") {
-                        arm.setPosition(0.7);
-                        arm.updateArm();
-                    }else {
-
-                    }
+            }else if(controller2.dpad_up){
+                if(info.name=="gobilda") {
+                    arm.setPosition(0.7);
+                    arm.updateArm();
+                }else {
 
                 }
+
             }
+        }
 
         if (controller2.right_bumper) {
             if(info.name=="rev"){
@@ -264,6 +261,7 @@ public class Chassis extends LinearOpMode {
 
 
         //launcher.reset();
+        telemetry.update();
 
         waitForStart();
 
@@ -286,15 +284,16 @@ public class Chassis extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            if(this.gamepad2.start&this.gamepad2.back&this.gamepad2.y){
-                controller1=this.gamepad2;
-            }
-
             ChassisMethods(chassis,gyroscope);
 
             ElevatorMethods(elevator);
 
-            ArmMethods(arm,pivot);
+            if(info.name=="gobilda") {
+                ArmMethods(arm, pivot);
+            }else{
+                pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.left_bumper, this.gamepad2.right_bumper);
+            }
+
 
             telemetry.update();
 

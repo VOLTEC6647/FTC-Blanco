@@ -14,13 +14,13 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
-
+/*
 repositories {
     flatDir {
         dirs 'libs', 'C:\\Users\\rfgar\\navx-micro\\android\\libs'
     }
 }
-
+*/
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 

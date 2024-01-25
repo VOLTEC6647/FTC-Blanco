@@ -11,7 +11,7 @@ public class PivotSubsystem {
     public Servo servoClaw;
     private Telemetry telemetry;
 
-    private double CLAW_OPEN = 0.3;
+    private final double CLAW_OPEN = 1;
     private final double CLAW_CLOSE = 0;
     private final double PIVOT_UP = 0;
 
@@ -21,8 +21,6 @@ public class PivotSubsystem {
         this.servoClaw = hardwareMap.get(Servo.class, "claw");
         this.servoPivot = hardwareMap.get(Servo.class, "pivot");
         this.telemetry = telemetry;
-
-        this.CLAW_OPEN = 90;
     }
 
     public static PivotSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -49,6 +47,17 @@ public class PivotSubsystem {
         servoPivot.setPosition(PIVOT_DOWN);
     }
 
+    public void pivotControls(boolean buttonA, boolean buttonB, boolean leftBumper, boolean rightBumper) {
+        if (buttonA) {
+            up();
+        } else if (buttonB) {
+            down();
+        } else if (leftBumper) {
+            open();
+        } else if (rightBumper) {
+            close();
+        }
+    }
     public void printPositions() {
         telemetry.addData("claw", servoClaw.getPosition());
         telemetry.addData("pivot", servoPivot.getPosition());
