@@ -79,10 +79,11 @@ public class Chassis extends LinearOpMode {
              */
             if(Math.abs(controller2.right_stick_y)>0.3) {
                 elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
+                telemetry.addData("lsthikkk",controller2.right_stick_y);
                 if (controller2.right_stick_y > 0.3) {
-                    elevator.goUp();
-                } else if (controller2.right_stick_y < -0.3) {
                     elevator.goDown();
+                } else if (controller2.right_stick_y < -0.3) {
+                    elevator.goUp();
                 }
             }else {
                 elevator.stop();
@@ -141,9 +142,9 @@ public class Chassis extends LinearOpMode {
 
         if(controller2.x){
             if(controller1.back){
-                intake.setPower(-0.7);
+                intake.setPower(-1);
             }else {
-                intake.setPower(0.7);
+                intake.setPower(1);
             }
         }else{
             intake.setPower(0);
@@ -183,8 +184,10 @@ public class Chassis extends LinearOpMode {
 
                 } else if(controller2.dpad_left) {
                     if(info.name=="gobilda") {
-                        arm.setZero();
-                        arm.updateArm();
+                        if(!arm.open){
+                            arm.setZero();
+                            arm.updateArm();
+                        }
                     }else {
                         pivot.down();
                     }
@@ -260,7 +263,7 @@ public class Chassis extends LinearOpMode {
         ////telemetry.update();
 
 
-        launcher.reset();
+        //launcher.reset();
 
         waitForStart();
 
@@ -295,10 +298,10 @@ public class Chassis extends LinearOpMode {
 
             telemetry.update();
 
-            if (controller2.y) {
+            if (controller2.y&&!(controller2.start||controller2.back)) {
                 launcher.launch();
             } else {
-                launcher.reset();
+                //launcher.reset();
             }
 
 

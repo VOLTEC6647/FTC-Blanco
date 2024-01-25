@@ -51,26 +51,30 @@ public class ElevatorSubsystem {
         //elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+    private double slowSpeed = 0.3;
     public void goDown(){
-        if(false||elevator1.getCurrentPosition()<maxzone) {
-            elevator1.setPower(DebugSpeed);
-            elevator2.setPower(-DebugSpeed);
+        if(false&&elevator1.getCurrentPosition() < minzone) {
+
+
+            elevator1.setPower(-slowSpeed);
+            elevator2.setPower(slowSpeed);
+            telemetry.addData("Zelevator","maxzone");
 
         }else{
-            elevator1.setPower(0.2);
-            elevator2.setPower(-0.2);
-            telemetry.addData("Zelevator","maxzone");
+            elevator1.setPower(-DebugSpeed);
+            elevator2.setPower(DebugSpeed);
         }
     }
     public void goUp(){
-        if (false||elevator1.getCurrentPosition() > minzone) {
-            elevator1.setPower(-DebugSpeed);
-            elevator2.setPower(DebugSpeed);
+        if (true&&elevator1.getCurrentPosition()>maxzone) {
+            elevator1.setPower(slowSpeed);
+            elevator2.setPower(-slowSpeed);
+            telemetry.addData("Zelevator","minzone");
+
 
         } else {
-            elevator1.setPower(-0.2);
-            elevator2.setPower(0.2);
-            telemetry.addData("Zelevator","minzone");
+            elevator1.setPower(DebugSpeed);
+            elevator2.setPower(-DebugSpeed);
         }
 
     }
