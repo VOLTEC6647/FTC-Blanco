@@ -65,11 +65,11 @@ public class ArmSubsystem {
         angle=0.07;
     }
 
-    //public void setPosition(double position){
-    //    angle=position;
-    //}
+    public void setPosition(double position){
+        angle=position;
+    }
 
-    public void setPosition(int desiredPosition) {
+    public void setAxisPosition(int desiredPosition) {
         if (desiredPosition == 1) {
             axis.setPosition(1);
         } else if (desiredPosition == 0) {

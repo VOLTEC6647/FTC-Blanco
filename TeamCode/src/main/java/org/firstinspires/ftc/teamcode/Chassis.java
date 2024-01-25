@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
@@ -34,6 +35,8 @@ public class Chassis extends LinearOpMode {
     private DcMotor intake;
     boolean hasTarget=false;
     public double gyr;
+    public Gamepad controller1;
+    public Gamepad controller2;
 
 
     public ChassisSubsystem chassis;
@@ -46,8 +49,9 @@ public class Chassis extends LinearOpMode {
             elevator.goDown(this.gamepad1.left_trigger);
         }
         */
+
         if(!this.gamepad1.start) {
-            if (this.gamepad1.dpad_up && this.gamepad1.b) {
+            /*if (this.gamepad1.dpad_up && this.gamepad1.b) {
                 elevator.elevator1.setPower(-1);
             } else if (this.gamepad1.dpad_down && this.gamepad1.b) {
                 elevator.elevator1.setPower(1);
@@ -64,8 +68,19 @@ public class Chassis extends LinearOpMode {
             } else {
                 elevator.elevator1.setPower(0);
                 elevator.elevator2.setPower(0);
+            }*/
+            if(Math.abs(controller2.right_stick_y)>0.3) {
+                elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
+                if (controller2.right_stick_y > 0.3) {
+                    elevator.goDown();
+                } else if (controller2.right_stick_y < -0.3) {
+                    elevator.goUp();
+                }
+            }else {
+                elevator.stop();
             }
         }
+
     }
     void ChassisMethods(ChassisSubsystem chassis, GyroscopeSubsystem gyroscope){
         //IMUMethods();
@@ -162,8 +177,15 @@ public class Chassis extends LinearOpMode {
         //telemetry.addData("GyroY", AndroidOrientation().getAngle().secondPosition());
         telemetry.update();
 
+
         waitForStart();
 
+        controller1 = this.gamepad1;
+        controller2 = this.gamepad2;
+
+        if(this.gamepad2.start&this.gamepad2.back){
+            controller1=this.gamepad2;
+        }
         //arm.setZero();
 
         while(opModeIsActive()) {

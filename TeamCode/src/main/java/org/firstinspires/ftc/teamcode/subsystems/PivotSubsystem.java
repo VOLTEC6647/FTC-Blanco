@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import android.icu.text.IDNA;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -9,6 +11,7 @@ public class PivotSubsystem {
     private static PivotSubsystem instance;
     public Servo servoPivot;
     public Servo servoClaw;
+    public Servo axis;
     private Telemetry telemetry;
 
     private final double CLAW_OPEN = 1;
