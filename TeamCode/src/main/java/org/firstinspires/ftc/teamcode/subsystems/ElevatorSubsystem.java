@@ -8,7 +8,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class ElevatorSubsystem {
     private static ElevatorSubsystem instance;
-
     public DcMotor elevator1;
     public DcMotor elevator2;
 
@@ -25,15 +24,15 @@ public class ElevatorSubsystem {
 
     public Telemetry telemetry;
 
-    public static ElevatorSubsystem getInstance(HardwareMap hardwareMap){
+    public static ElevatorSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry){
         if (instance == null) {
-            instance = new ElevatorSubsystem(hardwareMap);
+            instance = new ElevatorSubsystem(hardwareMap,telemetry);
 
         }
 
         return instance;
     }
-    public ElevatorSubsystem(HardwareMap hardwareMap){
+    public ElevatorSubsystem(HardwareMap hardwareMap, Telemetry telemetry){
         this.hardwareMap=hardwareMap;
         this.elevator1=hardwareMap.get(DcMotor.class, "elL");
         this.elevator2=hardwareMap.get(DcMotor.class, "elR");
@@ -47,26 +46,35 @@ public class ElevatorSubsystem {
             this.elevator1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.elevator2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+        this.telemetry=telemetry;
 
         //elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
+    private double slowSpeed = 0.3;
     public void goDown(){
-        if(true||-elevator1.getCurrentPosition() > minzone) {
-            elevator1.setPower(DebugSpeed);
-            elevator2.setPower(-DebugSpeed);
+        if(false&&elevator1.getCurrentPosition() < minzone) {
+
+
+            elevator1.setPower(-slowSpeed);
+            elevator2.setPower(slowSpeed);
+            telemetry.addData("Zelevator","maxzone");
+
         }else{
-            elevator1.setPower(0.2);
-            elevator2.setPower(-0.2);
+            elevator1.setPower(-DebugSpeed);
+            elevator2.setPower(DebugSpeed);
         }
     }
     public void goUp(){
-        if (true||-elevator1.getCurrentPosition()<maxzone) {
-            elevator1.setPower(-DebugSpeed);
-            elevator2.setPower(DebugSpeed);
+        if (true&&elevator1.getCurrentPosition()>maxzone) {
+            elevator1.setPower(slowSpeed);
+            elevator2.setPower(-slowSpeed);
+            telemetry.addData("Zelevator","minzone");
+
+
         } else {
-            elevator1.setPower(-0.2);
-            elevator2.setPower(0.2);
+            elevator1.setPower(DebugSpeed);
+            elevator2.setPower(-DebugSpeed);
         }
 
     }

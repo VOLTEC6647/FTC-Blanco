@@ -14,8 +14,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DroneLauncherSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -26,11 +28,14 @@ import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
 @TeleOp
 
 public class Chassis extends LinearOpMode {
-
+    
+    public static Gamepad controller1;
+    public static Gamepad controller2;
+    
     private Blinker control_Hub;
     private double speed=1;
     private IMU imu;
-    private double baseSpeed=0.5;
+    public double baseSpeed=1;
     private Orientation orientation;
     private DcMotor intake;
     boolean hasTarget=false;
@@ -43,87 +48,106 @@ public class Chassis extends LinearOpMode {
 
     void ElevatorMethods(ElevatorSubsystem elevator){
         /*
-        if(this.gamepad1.right_trigger>0.1){
-            elevator.goUp(this.gamepad1.right_trigger);
-        }else if(this.gamepad1.left_trigger<0.1){
-            elevator.goDown(this.gamepad1.left_trigger);
+        if(controller1.right_trigger>0.1){
+            elevator.goUp(controller1.right_trigger);
+        }else if(controller1.left_trigger<0.1){
+            elevator.goDown(controller1.left_trigger);
         }
         */
 
-        if(!this.gamepad1.start) {
-            /*if (this.gamepad1.dpad_up && this.gamepad1.b) {
+        elevator.getPosition(telemetry);
+        if(!controller2.start) {
+            /*
+            if (controller1.dpad_up && controller1.b) {
                 elevator.elevator1.setPower(-1);
-            } else if (this.gamepad1.dpad_down && this.gamepad1.b) {
+            } else if (controller1.dpad_down && controller1.b) {
                 elevator.elevator1.setPower(1);
-            } else if (this.gamepad1.dpad_up && this.gamepad1.a) {
+            } else if (controller1.dpad_up && controller1.a) {
                 elevator.elevator1.setPower(-1);
-            } else if (this.gamepad1.dpad_down && this.gamepad1.a) {
+            } else if (controller1.dpad_down && controller1.a) {
                 elevator.elevator1.setPower(1);
-            } else if (this.gamepad1.dpad_up) {
+            } else if (controller1.dpad_up) {
                 elevator.elevator2.setPower(-1);
                 elevator.elevator1.setPower(-1);
-            } else if (this.gamepad1.dpad_down) {
+            } else if (controller1.dpad_down) {
                 elevator.elevator2.setPower(1);
                 elevator.elevator1.setPower(1);
             } else {
                 elevator.elevator1.setPower(0);
                 elevator.elevator2.setPower(0);
-            }*/
-            if(Math.abs(gamepad2.right_stick_y)>0.3) {
-                elevator.DebugSpeed = Math.abs(gamepad2.right_stick_y);
-                if (gamepad2.right_stick_y > 0.3) {
-                    elevator.goDown();
-                } else if (gamepad2.right_stick_y < -0.3) {
+            }
+
+             */
+            if(Math.abs(controller2.right_stick_y)>0.3) {
+                elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
+                if (controller2.right_stick_y > 0.3) {
                     elevator.goUp();
+                } else if (controller2.right_stick_y < -0.3) {
+                    elevator.goDown();
                 }
             }else {
                 elevator.stop();
             }
         }
-
     }
     void ChassisMethods(ChassisSubsystem chassis, GyroscopeSubsystem gyroscope){
         //IMUMethods();
         gyr = gyroscope.getRotation();
         //gyr=0;
         telemetry.addData("gyr",gyr);
-        if(this.gamepad1.back){
-            if(this.gamepad1.a){
+        if(controller1.back){
+            if(controller1.a){
                 gyroscope.reset();
+                chassis.updateTargetAngle();
             }
 
         }
-        if(this.gamepad1.x){
-            chassis.FrontLeftMotor.setPower(1);
-        }else if(this.gamepad1.y){
-            chassis.FrontLeftMotor.setPower(-1);
+        if(controller1.y){
+            chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            chassis.FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            chassis.BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            chassis.BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         }else{
-            chassis.FrontLeftMotor.setPower(0);
+            chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            chassis.FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            chassis.BackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            chassis.BackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
-        if(this.gamepad1.start){
-            if (this.gamepad1.dpad_up){
+        if(controller1.start){
+            if (controller1.dpad_up){
                 gyroscope.setOffset(180);
                 chassis.updateTargetAngle();
             }
-            if (this.gamepad1.dpad_right){
+            if (controller1.dpad_right){
                 gyroscope.setOffset(270);
                 chassis.updateTargetAngle();
             }
-            if (this.gamepad1.dpad_down){
+            if (controller1.dpad_down){
                 gyroscope.setOffset(0);
                 chassis.updateTargetAngle();
             }
-            if (this.gamepad1.dpad_left){
+            if (controller1.dpad_left){
                 gyroscope.setOffset(90);
                 chassis.updateTargetAngle();
             }
         }
-        chassis.arcadeDrive(this.gamepad1.left_stick_x,-this.gamepad1.left_stick_y,this.gamepad1.right_stick_x,speed,gyr);
+        chassis.arcadeDrive(controller1.left_stick_x,-controller1.left_stick_y,controller1.right_stick_x,speed,gyr);
 
-        if(this.gamepad1.right_bumper){
-            speed=baseSpeed*0.5;
+        if(controller1.right_trigger>0.1){
+            speed=baseSpeed*(1.4-controller1.right_trigger);
         }else{
             speed=baseSpeed;
+        }
+
+        if(controller2.x){
+            if(controller1.back){
+                intake.setPower(-1);
+            }else {
+                intake.setPower(1);
+            }
+        }else{
+            intake.setPower(0);
         }
 
 
@@ -134,51 +158,124 @@ public class Chassis extends LinearOpMode {
         //telemetry.addData("GyroY", AGyroscope.getY());
         telemetry.addData("Gyro", orientation.firstAngle);
 
-        if(this.gamepad1.a){
-            //intake.setPower(-1);
 
-        }else{
-            //intake.setPower(0);
-        }
-        if(this.gamepad1.right_stick_button){
+        if(controller1.right_stick_button){
             //imu.resetYaw();
 
         }
     }
-    void ArmMethods(){
+    void ArmMethods(ArmSubsystem arm, PivotSubsystem pivot){
+
+        if(info.name=="gobilda"){
+            arm.going_down =Chassis.controller2.left_stick_y < -0.2;
+            arm.going_down = false;
+        }
+
+
+
+        if(!controller2.start){
+            if (controller2.dpad_right) {
+                if(info.name=="gobilda") {
+                    arm.setPosition(0.5);
+                    arm.updateArm();
+                }else {
+                    pivot.up();
+                }
+
+            } else if(controller2.dpad_left) {
+                if(info.name=="gobilda") {
+                    if(!arm.open){
+                        arm.setZero();
+                        arm.updateArm();
+                    }
+                }else {
+                    pivot.down();
+                }
+
+            }else if(controller2.dpad_up){
+                if(info.name=="gobilda") {
+                    arm.setPosition(0.7);
+                    arm.updateArm();
+                }else {
+
+                }
+
+            }
+        }
+
+        if (controller2.right_bumper) {
+            if(info.name=="rev"){
+                pivot.open();
+            }else{
+                arm.open();
+            }
+
+        } else if(controller2.left_bumper) {
+            if(info.name=="rev"){
+                pivot.close();
+            }else{
+                arm.close();
+            }
+        }
+        if(info.name=="gobilda") {
+            if (arm.servoDelta.seconds() > 0.5) {
+                arm.servoDelta.reset();
+                arm.showPositions();
+
+            }
+            telemetry.addData("angle", arm.angle);
+        }
+
 
     }
-
 
     @Override
     public void runOpMode() {
         //this.telemetry = telemetry;
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         //imu = hardwareMap.get(IMU.class, "imu");
-        if(Parameters.robot=="marvin"){
-            intake = hardwareMap.get(DcMotor.class, "intake");
-        }
+        intake = hardwareMap.get(DcMotor.class, "intake");
 
+
+        //control_Hub.setConstant(3);
 
         telemetry.addData("Status", "Initialized");
         /////////////////////////////
         ChassisSubsystem chassis=ChassisSubsystem.getInstance(hardwareMap,telemetry);
         ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
-        //ArmSubsystem arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
-        PivotSubsystem pivot = PivotSubsystem.getInstance(hardwareMap, telemetry);/////////////////////////////
-
+        DroneLauncherSubsystem launcher = DroneLauncherSubsystem.getInstance(hardwareMap,telemetry);
+        PivotSubsystem pivot = null;
+        ArmSubsystem arm = null;
+        if(info.name=="rev") {
+            pivot = PivotSubsystem.getInstance(hardwareMap, telemetry);
+        }else{
+            arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
+        }
+        /////////////////////////////
         //orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         //GyroscopeSubsystem gyroscope=GyroscopeSubsystem.getInstance();
 
         //telemetry.addData("GyroX", orientation.secondAngle);
         //telemetry.addData("GyroY", AndroidOrientation().getAngle().secondPosition());
-        telemetry.update();
+        ////telemetry.update();
 
+
+        //launcher.reset();
 
         waitForStart();
+
+        chassis.updateTargetAngle();
+
+        if(info.name=="gobilda"){
+            arm.setZero();
+            arm.updateArm();
+        }
+
+
+        //arm.setZero();
 
         controller1 = this.gamepad1;
         controller2 = this.gamepad2;
@@ -186,7 +283,6 @@ public class Chassis extends LinearOpMode {
         if(this.gamepad2.start&this.gamepad2.back){
             controller1=this.gamepad2;
         }
-        //arm.setZero();
 
         while(opModeIsActive()) {
 
@@ -194,13 +290,16 @@ public class Chassis extends LinearOpMode {
 
             ElevatorMethods(elevator);
 
-            ArmMethods();
-
-            elevator.goDown();
-
-            pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.left_bumper, this.gamepad2.right_bumper);
+            ArmMethods(arm,pivot);
 
             telemetry.update();
+
+            if (controller2.y&&!(controller2.start||controller2.back)) {
+                launcher.launch();
+            } else {
+                //launcher.reset();
+            }
+
 
         }
         /*

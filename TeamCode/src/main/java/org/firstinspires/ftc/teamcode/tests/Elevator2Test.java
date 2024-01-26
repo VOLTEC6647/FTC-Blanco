@@ -15,7 +15,7 @@ public class Elevator2Test extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
 
-        ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap);
+        ElevatorSubsystem elevator = ElevatorSubsystem.getInstance(hardwareMap,telemetry);
 
         telemetry.update();
 
