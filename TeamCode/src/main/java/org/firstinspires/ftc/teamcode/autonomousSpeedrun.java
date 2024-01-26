@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 
 @Autonomous
-public class autonomous extends LinearOpMode {
+public class autonomousSpeedrun extends LinearOpMode {
     private OpenCVSubsystem camera;
     private ChassisSubsystem chassis;
     private GyroscopeSubsystem gyroscope;
@@ -66,76 +66,10 @@ public class autonomous extends LinearOpMode {
         boolean test = true;
 
         waitForStart();
-        while (opModeIsActive()) {
-            boolean dolor = true;
-
-
-            odometry.resetEncoders();
-
-            while (dolor) {
-                //dolor = odometry.goTo(0,-63);
-            }
-            chassis.setMotors(0,0,0,0);
-            sleep(500);
-
-            dolor = true;
-            while (dolor) {
-                dolor = odometry.rotateTo(gyroscope.getRotation(), -90);
-            }
-            odometry.resetEncoders();
-            break;
-
-//            if (gyroscope.getRotation() < -88) {
-//                arm.open();
-//                sleep(1000);
-//                arm.setPosition(1);
-//            }
-//                chassis.setMotors(0,0,0,0);
-//
-//            //arm.close();
-            //arm.setPosition(0);
-            //elevator.goUp();
-
-            /*switch (camera.findObjectSide()) {
-                case 1:
-                    odometry.goTo(0,63);
-                    odometry.rotateTo(gyroscope.getRotation(), -90);
-                    if (gyroscope.getRotation() < -88) {
-                        arm.open();
-                        sleep(1000);
-                        arm.setPosition(1);
-                    }
-
-                break;
-
-                case 2:
-                    odometry.goTo(-15,63);
-                    if (odometry.getXDist() > 22) {
-                        arm.open();
-                        arm.setPosition(1);
-                    }
-
-                break;
-
-                case 3:
-                    odometry.goTo(0,63);
-                    chassis.targetAngle = 90;
-                    if (gyroscope.getRotation() < 88) {
-                        arm.open();
-                        sleep(1000);
-                        arm.setPosition(1);
-                    }
-
-                break;
-            }*/
-
-            //telemetry.addData("cx: ", camera.getcx());
-            //telemetry.addData("cy: ", camera.getcy());
-//            odometry.printEncoders();
-//            telemetry.addData("rotation: ", gyroscope.getRotation());
-//            telemetry.update();
-
-        }
+        //while (opModeIsActive()) {
+           odometry.goTo(10,10);
+           //break;
+        //}
 
     }
 }
