@@ -46,8 +46,11 @@ public class PivotSubsystem {
     public void down() {
         servoPivot.setPosition(PIVOT_DOWN);
     }
+    public void middle() {
+        servoPivot.setPosition(0.3);
+    }
 
-    public void pivotControls(boolean buttonA, boolean buttonB, boolean leftBumper, boolean rightBumper) {
+    public void pivotControls(boolean buttonA, boolean buttonB, boolean buttonY, boolean leftBumper, boolean rightBumper) {
         if (buttonA) {
             up();
         } else if (buttonB) {
@@ -56,6 +59,8 @@ public class PivotSubsystem {
             open();
         } else if (rightBumper) {
             close();
+        } else if (buttonY) {
+            middle();
         }
     }
     public void printPositions() {

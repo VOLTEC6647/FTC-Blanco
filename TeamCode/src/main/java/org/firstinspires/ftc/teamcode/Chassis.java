@@ -297,7 +297,7 @@ public class Chassis extends LinearOpMode {
             if(info.name=="gobilda") {
                 ArmMethods(arm, pivot);
             }else{
-                pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.left_bumper, this.gamepad2.right_bumper);
+                pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.dpad_right, this.gamepad2.left_bumper, this.gamepad2.right_bumper);
             }
 
 
