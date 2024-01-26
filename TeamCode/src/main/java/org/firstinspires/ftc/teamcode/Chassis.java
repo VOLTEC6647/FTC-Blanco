@@ -69,11 +69,11 @@ public class Chassis extends LinearOpMode {
                 elevator.elevator1.setPower(0);
                 elevator.elevator2.setPower(0);
             }*/
-            if(Math.abs(controller2.right_stick_y)>0.3) {
-                elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
-                if (controller2.right_stick_y > 0.3) {
+            if(Math.abs(gamepad2.right_stick_y)>0.3) {
+                elevator.DebugSpeed = Math.abs(gamepad2.right_stick_y);
+                if (gamepad2.right_stick_y > 0.3) {
                     elevator.goDown();
-                } else if (controller2.right_stick_y < -0.3) {
+                } else if (gamepad2.right_stick_y < -0.3) {
                     elevator.goUp();
                 }
             }else {
@@ -195,6 +195,8 @@ public class Chassis extends LinearOpMode {
             ElevatorMethods(elevator);
 
             ArmMethods();
+
+            elevator.goDown();
 
             pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.left_bumper, this.gamepad2.right_bumper);
 

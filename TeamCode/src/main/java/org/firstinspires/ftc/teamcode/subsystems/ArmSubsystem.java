@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Chassis;
+import org.firstinspires.ftc.teamcode.info;
 
 import javax.crypto.spec.DESedeKeySpec;
 
@@ -69,14 +72,7 @@ public class ArmSubsystem {
         angle=position;
     }
 
-    public void setAxisPosition(int desiredPosition) {
-        if (desiredPosition == 1) {
-            axis.setPosition(1);
-        } else if (desiredPosition == 0) {
-            axis.setPosition(0);
-        }
-    }
-    public void updateArm(){
+    public void updateArm(int axisPosition) {
         if(going_down){
             servoL.setPosition(angle-0.3);
             servoR.setPosition(servoR.MAX_POSITION-angle+0.3);
@@ -85,9 +81,15 @@ public class ArmSubsystem {
             servoR.setPosition(servoR.MAX_POSITION-angle);
         }
 
-
-        updateAxis();
+        if (axisPosition == 0) {
+            setZero();
+        }
+        if (axisPosition == 1) {
+            updateAxis();
+        }
     }
+
+
     public void updateAxis(){
         if(angle>0.1){
             outside=true;

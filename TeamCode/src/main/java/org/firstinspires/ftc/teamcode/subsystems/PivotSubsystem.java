@@ -55,9 +55,9 @@ public class PivotSubsystem {
             up();
         } else if (buttonB) {
             down();
-        } else if (leftBumper) {
-            open();
         } else if (rightBumper) {
+            open();
+        } else if (leftBumper) {
             close();
         }
     }
