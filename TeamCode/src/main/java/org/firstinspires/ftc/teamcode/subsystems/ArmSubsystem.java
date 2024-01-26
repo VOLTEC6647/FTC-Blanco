@@ -32,6 +32,10 @@ public class ArmSubsystem {
 
     public ElapsedTime servoDelta= new ElapsedTime();
 
+    public boolean extended = false;
+
+    public boolean open = false;
+
 
     public static ArmSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry){
         if (instance == null) {
@@ -59,19 +63,12 @@ public class ArmSubsystem {
     }
     public void setZero(){
         angle=0.07;
+        extended = false;
     }
 
-    //public void setPosition(double position){
-    //    angle=position;
-    //    extended = true;
-    //}
-
-    public void setPosition(int desiredPosition) {
-        if (desiredPosition == 1) {
-            axis.setPosition(1);
-        } else if (desiredPosition == 0) {
-            axis.setPosition(0);
-        }
+    public void setPosition(double position){
+        angle=position;
+        extended = true;
     }
 
     public void updateArm(){
@@ -99,9 +96,12 @@ public class ArmSubsystem {
     }
     public void open(){
         claw.setPosition(claw.MIN_POSITION);
+        open = true;
+
     }
     public void close(){
         claw.setPosition(claw.MAX_POSITION);
+        open = false;
     }
 
 

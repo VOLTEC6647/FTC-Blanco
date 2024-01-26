@@ -140,6 +140,13 @@ public class ChassisSubsystem {
 
               }else{
                   angularError = calculateRotation((int) degrees, (int) targetAngle);
+                  telemetry.addData("angularError",angularError);
+                  double angularThreshold = 10;
+                  if(Math.abs(angularError)>angularThreshold){
+                      r=angularError*0.5;
+                  }
+                  /*
+                  angularError = calculateRotation((int) degrees, (int) targetAngle);
                   final double KPPP = 0.03;
                   double errror = targetAngle - degrees;
                   double speeed = errror * KPPP;
@@ -149,6 +156,8 @@ public class ChassisSubsystem {
                   //if(Math.abs(angularError)>angularThreshold) {
                   //}
                   r = speeed;
+
+                   */
               }
 
           }

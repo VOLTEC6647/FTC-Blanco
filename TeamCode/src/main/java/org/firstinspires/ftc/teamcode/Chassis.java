@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DroneLauncherSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -79,10 +78,11 @@ public class Chassis extends LinearOpMode {
              */
             if(Math.abs(controller2.right_stick_y)>0.3) {
                 elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
+                telemetry.addData("lsthikkk",controller2.right_stick_y);
                 if (controller2.right_stick_y > 0.3) {
-                    elevator.goUp();
-                } else if (controller2.right_stick_y < -0.3) {
                     elevator.goDown();
+                } else if (controller2.right_stick_y < -0.3) {
+                    elevator.goUp();
                 }
             }else {
                 elevator.stop();
@@ -145,7 +145,13 @@ public class Chassis extends LinearOpMode {
             }else {
                 intake.setPower(1);
             }
-        }else{
+        }else if(controller2.b){
+            if(!controller1.back){
+                intake.setPower(-1);
+            }else {
+                intake.setPower(1);
+            }
+        }else {
             intake.setPower(0);
         }
 
