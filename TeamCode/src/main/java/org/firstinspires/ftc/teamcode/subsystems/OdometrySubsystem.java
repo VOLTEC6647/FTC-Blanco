@@ -74,32 +74,24 @@ public class OdometrySubsystem {
         telemetry.addData("X: ", getXDist());
         telemetry.addData("Y: ", getYDist());
     }
-    final double KP = 0.05;
+    final double KP = 0.03;
 
-    public void goTo(int x, int y) {
-//        resetEncoders();
+    public boolean goTo(int x, int y) {
+        double yError = y - getYDist() * -1;
+        double xError = x - getXDist() * 1;
+        double ySpeed = yError * KP;
+        double xSpeed = xError * KP;
+        telemetry.addData("yError", yError);
+        telemetry.addData("xError: ", xError);
+        telemetry.addData("poss", getYDist());
 
-        double yError=0;
-        double xError=0;
+        chassis.moveY(ySpeed);
+        chassis.moveX(xSpeed);
+        telemetry.addData("aaaa", xError);
+        telemetry.addData("aaaayyy", yError);
+        telemetry.update();
 
-        while (Math.abs(yError)+Math.abs(xError) > 10) {
-            yError = y - getYDist() * -1;
-            xError = x - getXDist() * 1;
-            double ySpeed = yError * KP;
-            double xSpeed = xError * KP;
-            telemetry.addData("yError", yError);
-            telemetry.addData("xError: ", xError);
-            telemetry.addData("poss", getYDist());
-
-            //chassis.arcadeDrive(xSpeed,ySpeed,0,1,gyr.getRotation());
-            chassis.moveY(ySpeed);
-            chassis.moveX(xSpeed);
-
-            telemetry.update();
-
-        }
-
-
+        return (Math.abs(xError) + Math.abs(yError) > 5) ? true : false;
     }
     public boolean rotateTo(double degree, double target) {
         final double KP2 = 0.018;
@@ -110,5 +102,4 @@ public class OdometrySubsystem {
 
         return (Math.abs(rError) > 2);
     }
-
 }

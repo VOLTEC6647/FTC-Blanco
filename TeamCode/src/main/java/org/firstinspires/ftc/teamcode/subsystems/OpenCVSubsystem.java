@@ -104,16 +104,17 @@ public class OpenCVSubsystem {
 
     public int findObjectSide() {
         int side = 0;
-        if (getcx() < 220) {
-            side = LEFTSIDE;
-            controlHubCam.stopStreaming();
-        } else if (getcx() > 220 && getcx() < 440) {
-            side = CENTERSIDE;
-            controlHubCam.stopStreaming();
-        } else if (getcx() > 440) {
-            side = RIGHTSIDE;
-            controlHubCam.stopStreaming();
+        final int CALIBRATION_REPETITIONS = 100;
+        for (int i = 0; i < CALIBRATION_REPETITIONS; i++) {
+            if (getcx() < 213) {
+                side = LEFTSIDE;
+            } else if (getcx() > 213 && getcx() < 425) {
+                side = CENTERSIDE;
+            } else if (getcx() > 425) {
+                side = RIGHTSIDE;
+            }
         }
+        controlHubCam.stopStreaming();
 
         return side;
     }

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.info;
 
 public class DroneLauncherSubsystem {
     private Servo launcher;
@@ -29,7 +30,13 @@ public class DroneLauncherSubsystem {
 
 
     public void launch(){
-        launcher.setPosition(launcher.MIN_POSITION);
+        //TRY MIN AND MAX
+        if(info.name=="rev"){
+            launcher.setPosition(launcher.MAX_POSITION);
+        }else{
+            launcher.setPosition(launcher.MIN_POSITION);
+        }
+
         telemetry.addData("launcher",launcher.getPosition());
     }
     public void reset(){launcher.setPosition(launcher.MAX_POSITION);

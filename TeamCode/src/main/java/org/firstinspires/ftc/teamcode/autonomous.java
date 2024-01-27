@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
+import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
 
 @Autonomous
 public class autonomous extends LinearOpMode {
@@ -23,24 +24,16 @@ public class autonomous extends LinearOpMode {
     private ElevatorSubsystem elevator;
     private OdometrySubsystem odometry;
     private ArmSubsystem arm;
+    private PivotSubsystem pivot;
     private Blinker control_Hub;
     private double speed = 1;
     private IMU imu;
-    private double baseSpeed = 0.5;
+    private double baseSpeed = 1;
     private Orientation orientation;
     private DcMotor intake;
     boolean hasTarget = false;
     public double gyr;
 
-//    public void rotateAngle(double target) {
-//        double difference = Math.abs(target - gyroscope.getRotation());
-//        while (difference > 2) {
-//            chassis.targetAngle = target;
-//            chassis.
-//            difference = Math.abs(target - gyroscope.getRotation());
-//        }
-//        odometry.resetEncoders();
-//    }
     @Override
     public void runOpMode() {
 
@@ -51,91 +44,327 @@ public class autonomous extends LinearOpMode {
         }
 
         camera = OpenCVSubsystem.getInstance(hardwareMap, telemetry);
-        chassis = ChassisSubsystem.getInstance(hardwareMap,telemetry);
+        chassis = ChassisSubsystem.getInstance(hardwareMap, telemetry);
         gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
-        elevator = ElevatorSubsystem.getInstance(hardwareMap,telemetry);
+        elevator = ElevatorSubsystem.getInstance(hardwareMap, telemetry);
         odometry = OdometrySubsystem.getInstance(hardwareMap, chassis, telemetry);
         arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
-
+        pivot = PivotSubsystem.getInstance(hardwareMap, telemetry);
 
         odometry.resetEncoders();
-
-        gyroscope.reset();
-
-        boolean rotation = true;
-        boolean test = true;
+        //gyroscope.reset();
 
         waitForStart();
         while (opModeIsActive()) {
+
+            ///////////////////////////////////////////////////////////
+            //////////////////////REV AUTONOMOUS///////////////////////
+            ///////////////////////////////////////////////////////////
             boolean dolor = true;
 
+            int objectSide = camera.findObjectSide();
 
-            odometry.resetEncoders();
+            if (info.name == "rev"); {
+                pivot.close();
+                sleep(50);
+                pivot.up();
+                elevator.goUp();
+                odometry.resetEncoders();
 
-            while (dolor) {
-                //dolor = odometry.goTo(0,-63);
+                if (objectSide == 1) {
+                    dolor = true;
+                    while (dolor) {
+                        dolor = odometry.goTo(0,-63);
+                    }
+                    chassis.setMotors(0,0,0,0);
+                    odometry.resetEncoders();
+
+                    dolor = true;
+                    while(dolor) {
+                        dolor = odometry.rotateTo(gyroscope.getRotation(), -90);
+                    }
+                    chassis.setMotors(0,0,0,0);
+                    gyroscope.reset();
+                    odometry.resetEncoders();
+
+                    sleep(300);
+                    pivot.up();
+                    pivot.open();
+
+                    dolor = true;
+                    while(dolor) {
+                        dolor = odometry.goTo(20,0);
+                    }
+                    chassis.setMotors(0,0,0,0);
+                    odometry.resetEncoders();
+
+                    dolor = true;
+                    while(dolor) {
+                        dolor = odometry.goTo(0,-100);
+                    }
+                    chassis.setMotors(0,0,0,0);
+                    odometry.resetEncoders();
+                }
+
+                switch (objectSide) {
+                    case 0:
+                        telemetry.addData("OBJECT NOT FOUND. ", "SKILL ISSUE IM AFRAID");
+                        sleep(5000);
+                        break;
+
+                    case 1:
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-63);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.rotateTo(gyroscope.getRotation(), -90);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        gyroscope.reset();
+                        odometry.resetEncoders();
+
+                        sleep(300);
+                        pivot.up();
+                        pivot.open();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.goTo(20,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.goTo(0,-100);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        break;
+                    case 2:
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-63);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(10,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        sleep(300);
+                        pivot.open();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(-20,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-20);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(-100,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        break;
+                    case 3:
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-63);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.rotateTo(gyroscope.getRotation(), 90);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        gyroscope.reset();
+                        odometry.resetEncoders();
+
+                        sleep(300);
+                        pivot.up();
+                        pivot.open();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(20,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-50);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        break;
+                }
+
+
+            ///////////////////////////////////////////////////////////
+            /////////            GOBILDA AUTONOMOUS          //////////
+            ///////////////////////////////////////////////////////////
+
+            /////////////         BLUE TEAM               /////////////
+
+            if (info.name == "gobilda") {
+                arm.close();
+                arm.setPosition(1);
+                arm.updateArm();
+                elevator.goUp();
+
+                odometry.resetEncoders();
+
+                switch (objectSide) {
+                    case 0:
+                        telemetry.addData("OBJECT NOT FOUND. ", "SKILL ISSUE IM AFRAID");
+                        sleep(5000);
+                        break;
+
+                    case 1:
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-63);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.rotateTo(gyroscope.getRotation(), -90);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        gyroscope.reset();
+                        odometry.resetEncoders();
+
+                        sleep(300);
+                        arm.setPosition(1);
+                        arm.updateArm();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.goTo(20,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.goTo(0,-100);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        break;
+                    case 2:
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-63);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(10,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        sleep(300);
+                        pivot.open();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(-20,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-20);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(-100,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        break;
+                    case 3:
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-63);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while(dolor) {
+                            dolor = odometry.rotateTo(gyroscope.getRotation(), 90);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        gyroscope.reset();
+                        odometry.resetEncoders();
+
+                        sleep(300);
+                        pivot.up();
+                        pivot.open();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(20,0);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        dolor = true;
+                        while (dolor) {
+                            dolor = odometry.goTo(0,-50);
+                        }
+                        chassis.setMotors(0,0,0,0);
+                        odometry.resetEncoders();
+
+                        break;
+                }
+
             }
-            chassis.setMotors(0,0,0,0);
-            sleep(500);
+            elevator.goUp();
+            telemetry.addData("object side: ", objectSide);
 
-            dolor = true;
-            while (dolor) {
-                dolor = odometry.rotateTo(gyroscope.getRotation(), -90);
-            }
-            odometry.resetEncoders();
-            break;
-
-//            if (gyroscope.getRotation() < -88) {
-//                arm.open();
-//                sleep(1000);
-//                arm.setPosition(1);
-//            }
-//                chassis.setMotors(0,0,0,0);
-//
-//            //arm.close();
-            //arm.setPosition(0);
-            //elevator.goUp();
-
-            /*switch (camera.findObjectSide()) {
-                case 1:
-                    odometry.goTo(0,63);
-                    odometry.rotateTo(gyroscope.getRotation(), -90);
-                    if (gyroscope.getRotation() < -88) {
-                        arm.open();
-                        sleep(1000);
-                        arm.setPosition(1);
-                    }
-
-                break;
-
-                case 2:
-                    odometry.goTo(-15,63);
-                    if (odometry.getXDist() > 22) {
-                        arm.open();
-                        arm.setPosition(1);
-                    }
-
-                break;
-
-                case 3:
-                    odometry.goTo(0,63);
-                    chassis.targetAngle = 90;
-                    if (gyroscope.getRotation() < 88) {
-                        arm.open();
-                        sleep(1000);
-                        arm.setPosition(1);
-                    }
-
-                break;
-            }*/
-
-            //telemetry.addData("cx: ", camera.getcx());
-            //telemetry.addData("cy: ", camera.getcy());
-//            odometry.printEncoders();
-//            telemetry.addData("rotation: ", gyroscope.getRotation());
-//            telemetry.update();
-
+            telemetry.update();
         }
 
+
     }
+}
 }
