@@ -110,7 +110,17 @@ public class ChassisSubsystem {
           setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
       }
 
+
+
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
+
+//        if (info.name == "rev") {
+//            double theta = Math.atan2(y, x);
+//            double power = Math.hypot(x, y);
+//            double sin = Math.sin(theta - Math.PI / 4);
+//            double cos = Math.cos(theta - Math.PI / 4);
+//            double max = Math.max(Math.abs(sin), Math.abs(cos));
+//        }
 
         telemetry.addData("targetAngle",targetAngle);
         if(Math.abs(targetAngle-180)<20){
@@ -139,7 +149,7 @@ public class ChassisSubsystem {
                     }
 
               }else{
-                  angularError = calculateRotation((int) degrees, (int) targetAngle);
+                  /*angularError = calculateRotation((int) degrees, (int) targetAngle);
                   final double KPPP = 0.03;
                   double errror = targetAngle - degrees;
                   double speeed = errror * KPPP;
@@ -148,7 +158,7 @@ public class ChassisSubsystem {
                   double angularThreshold = 10;
                   //if(Math.abs(angularError)>angularThreshold) {
                   //}
-                  r = speeed;
+                  r = speeed;*/
               }
 
           }
@@ -247,7 +257,5 @@ public class ChassisSubsystem {
             targetAngle=targetAngle-360;
         }
     }
-
-
 
 }

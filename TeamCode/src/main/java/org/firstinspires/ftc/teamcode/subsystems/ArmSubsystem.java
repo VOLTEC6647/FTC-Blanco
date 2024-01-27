@@ -78,7 +78,7 @@ public class ArmSubsystem {
         extended = true;
     }
 
-    public void updateArm(int axisPosition) {
+    public void updateArm(/*int axisPosition*/) {
         if(going_down){
             servoL.setPosition(angle-0.3);
             servoR.setPosition(servoR.MAX_POSITION-angle+0.3);
@@ -86,13 +86,15 @@ public class ArmSubsystem {
             servoL.setPosition(angle);
             servoR.setPosition(servoR.MAX_POSITION-angle);
         }
-
+/*
         if (axisPosition == 0) {
             setZero();
         }
         if (axisPosition == 1) {
             updateAxis();
         }
+
+ */
     }
 
 

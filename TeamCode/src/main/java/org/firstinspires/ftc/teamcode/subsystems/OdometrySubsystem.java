@@ -46,6 +46,7 @@ public class OdometrySubsystem {
             this.y=y;
         }
     }
+
     public coordinates position(){
         return new coordinates(fieldX,fieldY);
     }
@@ -53,6 +54,7 @@ public class OdometrySubsystem {
         fieldX = robotX + xEncoder.getCurrentPosition();
         fieldY = robotY + yEncoder.getCurrentPosition();
     }
+
     public void resetEncoders(){
         xEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         yEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -62,19 +64,22 @@ public class OdometrySubsystem {
 
     final double WHEELCIRCUMFERENCE = 4.8 * Math.PI;
     final int TICKS = 2000;
+
     public double getXDist() {
         return (xEncoder.getCurrentPosition() * WHEELCIRCUMFERENCE) / TICKS;
     }
+
     public double getYDist() {
         return (yEncoder.getCurrentPosition() * WHEELCIRCUMFERENCE) / TICKS;
     }
+
     public void printEncoders() {
         telemetry.addData("xEncoder", xEncoder.getCurrentPosition());
         telemetry.addData("yEncoder", yEncoder.getCurrentPosition());
         telemetry.addData("X: ", getXDist());
         telemetry.addData("Y: ", getYDist());
     }
-    final double KP = 0.03;
+    private final double KP = 0.03;
 
     public boolean goTo(int x, int y) {
             double yError = y - getYDist() * -1;
@@ -93,6 +98,7 @@ public class OdometrySubsystem {
 
             return (Math.abs(xError) + Math.abs(yError) > 5) ? true : false;
     }
+
     public boolean rotateTo(double degree, double target) {
         final double KP2 = 0.018;
         double rError = target - degree;

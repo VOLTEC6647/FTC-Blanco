@@ -17,7 +17,7 @@ public class PivotSubsystem {
     private final double CLAW_OPEN = 1;
     private final double CLAW_CLOSE = 0;
     private final double PIVOT_UP = 1;
-
+    private final double PIVOT_PICKUP = 0.3;
     private final double PIVOT_DOWN = 0;
 
     public PivotSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -50,15 +50,21 @@ public class PivotSubsystem {
         servoPivot.setPosition(PIVOT_DOWN);
     }
 
-    public void pivotControls(boolean buttonA, boolean buttonB, boolean leftBumper, boolean rightBumper) {
+    public void pickup() {
+        servoPivot.setPosition(PIVOT_PICKUP);
+    }
+
+    public void pivotControls(boolean buttonA, boolean buttonB, boolean buttonX, boolean leftBumper, boolean rightBumper) {
         if (buttonA) {
-            up();
+            pickup();
         } else if (buttonB) {
-            down();
+            up();
         } else if (rightBumper) {
             open();
         } else if (leftBumper) {
             close();
+        } else if (buttonX) {
+            down();
         }
     }
     public void printPositions() {

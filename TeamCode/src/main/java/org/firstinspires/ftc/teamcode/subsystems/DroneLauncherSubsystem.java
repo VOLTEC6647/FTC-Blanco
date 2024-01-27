@@ -27,12 +27,12 @@ public class DroneLauncherSubsystem {
 
     }
 
-
+    //POSSIBLY SWAP MAX_POSITION AND MIN_POSITION OUT
     public void launch(){
-        launcher.setPosition(launcher.MIN_POSITION);
+        launcher.setPosition(launcher.MAX_POSITION);
         telemetry.addData("launcher",launcher.getPosition());
     }
-    public void reset(){launcher.setPosition(launcher.MAX_POSITION);
+    public void reset(){launcher.setPosition(launcher.MIN_POSITION);
     telemetry.addData("launcher",launcher.getPosition());
 
     }
