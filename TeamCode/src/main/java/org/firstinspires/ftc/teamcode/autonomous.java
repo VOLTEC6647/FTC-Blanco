@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 
-@Autonomous
+//@Autonomous
 public class autonomous extends LinearOpMode {
     private OpenCVSubsystem camera;
     private ChassisSubsystem chassis;
@@ -54,7 +54,7 @@ public class autonomous extends LinearOpMode {
         chassis = ChassisSubsystem.getInstance(hardwareMap,telemetry);
         gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         elevator = ElevatorSubsystem.getInstance(hardwareMap,telemetry);
-        odometry = OdometrySubsystem.getInstance(hardwareMap, chassis, telemetry);
+        odometry = OdometrySubsystem.getInstance(hardwareMap, chassis,gyroscope, telemetry);
         arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
 
 

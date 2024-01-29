@@ -4,24 +4,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ReadWriteFile;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.OdometrySubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.OpenCVSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Parameters;
+import org.firstinspires.ftc.teamcode.subsystems.OdometrySubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OpenCVSubsystem;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @Autonomous
-public class autonomousSpeedrun extends LinearOpMode {
+public class autonomousRevisit extends LinearOpMode {
     private OpenCVSubsystem camera;
     private ChassisSubsystem chassis;
     private GyroscopeSubsystem gyroscope;
@@ -85,10 +81,11 @@ public class autonomousSpeedrun extends LinearOpMode {
             arm.setPosition(0.3);
             arm.updateArm();
         }else{
-            //odometry.goToYolo(0,20,0.5);
+            arm.close();
+            odometry.goToYolo(0,-64,0.5);
 
-            odometry.goToYolo(-125,0,0.5);
-            //odometry.goToYolo(-240,0,0.5);
+            //odometry.goToYolo(-125,0,0.5);
+            odometry.goToYolo(-222,0,0.5);
 
             //chassis.targetAngle+=;
             //odometry.goToYolo(0,-20,0.3);
@@ -100,61 +97,19 @@ public class autonomousSpeedrun extends LinearOpMode {
 
     }
     private void loadparameters(){
-        String filePath = "prop.txt";
-        File file = new File(filePath);
-        String contentRead = "";
-        if (file.exists()) {
-            try (FileInputStream in = new FileInputStream(file)) {
-                byte[] fileContent = new byte[(int) file.length()];
-                in.read(fileContent);
-                contentRead = new String(fileContent, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        prop = contentRead;
+        File myFileName;
 
-        filePath = "team.txt";
-        file = new File(filePath);
-        contentRead = "";
-        if (file.exists()) {
-            try (FileInputStream in = new FileInputStream(file)) {
-                byte[] fileContent = new byte[(int) file.length()];
-                in.read(fileContent);
-                contentRead = new String(fileContent, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        team = contentRead;
+        myFileName = AppUtil.getInstance().getSettingsFile("prop.txt");
+        prop = ReadWriteFile.readFile(myFileName);
 
-        filePath = "auto.txt";
-        file = new File(filePath);
-        contentRead = "";
-        if (file.exists()) {
-            try (FileInputStream in = new FileInputStream(file)) {
-                byte[] fileContent = new byte[(int) file.length()];
-                in.read(fileContent);
-                contentRead = new String(fileContent, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        auto = contentRead;
+        myFileName = AppUtil.getInstance().getSettingsFile("team.txt");
+        team = ReadWriteFile.readFile(myFileName);
 
-        filePath = "position.txt";
-        file = new File(filePath);
-        contentRead = "";
-        if (file.exists()) {
-            try (FileInputStream in = new FileInputStream(file)) {
-                byte[] fileContent = new byte[(int) file.length()];
-                in.read(fileContent);
-                contentRead = new String(fileContent, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        robotPosition = contentRead;
+        myFileName = AppUtil.getInstance().getSettingsFile("auto.txt");
+        auto = ReadWriteFile.readFile(myFileName);
+
+        myFileName = AppUtil.getInstance().getSettingsFile("position.txt");
+        robotPosition = ReadWriteFile.readFile(myFileName);
 
         telemetry.addData("Prop", prop);
         telemetry.addData("Team", team);

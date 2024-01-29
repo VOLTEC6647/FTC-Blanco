@@ -81,10 +81,19 @@ public class Chassis extends LinearOpMode {
                 telemetry.addData("lsthikkk",controller2.right_stick_y);
                 if (controller2.right_stick_y > 0.3) {
                     elevator.goDown();
+                    if(controller2.y){
+                        elevator.holding = true;
+                    }
+
                 } else if (controller2.right_stick_y < -0.3) {
                     elevator.goUp();
+                    elevator.holding = false;
                 }
-            }else {
+            }else if(elevator.holding){
+                elevator.DebugSpeed=0.6;
+                elevator.goUp();
+            }
+            else {
                 elevator.stop();
             }
         }
@@ -185,7 +194,16 @@ public class Chassis extends LinearOpMode {
                     pivot.up();
                 }
 
-            } else if(controller2.dpad_left) {
+            } else if (controller2.dpad_down) {
+                if(info.name=="gobilda") {
+                    arm.setPosition(0.3);
+                    arm.updateArm();
+                }else {
+                    pivot.up();
+                }
+
+            }
+            else if(controller2.dpad_left) {
                 if(info.name=="gobilda") {
                     if(!arm.open){
                         arm.setZero();

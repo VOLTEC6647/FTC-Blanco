@@ -24,6 +24,8 @@ public class ElevatorSubsystem {
 
     public Telemetry telemetry;
 
+    public boolean holding = false;
+
     public static ElevatorSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry){
         if (instance == null) {
             instance = new ElevatorSubsystem(hardwareMap,telemetry);
@@ -89,10 +91,13 @@ public class ElevatorSubsystem {
             resetEncoders();
         }
     }
+    /*
     public void setPower(double speed){
         elevator1.setPower(speed*DebugSpeed);
         elevator2.setPower(speed*DebugSpeed);
     }
+    
+     */
     public void resetEncoders(){
         elevator1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevator2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

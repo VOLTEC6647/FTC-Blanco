@@ -82,7 +82,7 @@ public class ArmSubsystem {
 
         updateAxis();
     }
-    public void updateAxis(){
+    private void updateAxis(){
         if(angle>0.1){
             outside=true;
             axis.setPosition(angle+0.66);

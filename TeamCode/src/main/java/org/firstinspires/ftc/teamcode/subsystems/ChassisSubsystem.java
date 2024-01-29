@@ -28,6 +28,8 @@ public class ChassisSubsystem {
     public DcMotor BackLeftMotor;
     public DcMotor BackRightMotor;
 
+    public boolean REnabled = true;
+
     double frontRightPower=0;
     double backLeftPower=0;
     double frontLeftPower=0;
@@ -126,7 +128,7 @@ public class ChassisSubsystem {
           if(Math.abs(y)<0.15){
               y=0;
           }
-          if(true) {
+          if(REnabled) {
               lastDir = degrees;
               if (Math.abs(r)>0.1||(System.currentTimeMillis() - timeOffset < 500&&true)) {
 

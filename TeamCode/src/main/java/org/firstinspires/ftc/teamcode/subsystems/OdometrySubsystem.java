@@ -24,16 +24,21 @@ public class OdometrySubsystem {
     private ChassisSubsystem chassis;
     private static OdometrySubsystem instance;
 
-    public OdometrySubsystem(HardwareMap hardwareMap, ChassisSubsystem chassis, Telemetry telemetry){
+    private GyroscopeSubsystem gyr;
+
+
+
+    public OdometrySubsystem(HardwareMap hardwareMap, ChassisSubsystem chassis,GyroscopeSubsystem gyr, Telemetry telemetry){
         this.hardwareMap=hardwareMap;
         this.xEncoder = hardwareMap.get(DcMotor.class, "xEncoder");
-        this.yEncoder = hardwareMap.get(DcMotor.class, "FL");
+        this.yEncoder = hardwareMap.get(DcMotor.class, "BR");
         this.chassis = chassis;
         this.telemetry = telemetry;
+        this.gyr = gyr;
     }
-    public static OdometrySubsystem getInstance(HardwareMap hardwareMap, ChassisSubsystem chassis, Telemetry telemetry){
+    public static OdometrySubsystem getInstance(HardwareMap hardwareMap, ChassisSubsystem chassis, GyroscopeSubsystem gyr, Telemetry telemetry){
         if (instance == null) {
-            instance = new OdometrySubsystem(hardwareMap, chassis, telemetry);
+            instance = new OdometrySubsystem(hardwareMap, chassis, gyr, telemetry);
         }
         return instance;
     }
@@ -75,6 +80,44 @@ public class OdometrySubsystem {
         telemetry.addData("Y: ", getYDist());
     }
     final double KP = 0.05;
+
+    public void goToYolo(int x, int y, double speed) {
+        resetEncoders();
+        while (Math.abs(y - getYDist())+Math.abs(x - getXDist()) > 5) {
+            int xdir=0;
+            int ydir=0;
+            if(x!=0){
+                if (x - getXDist()>0){
+                    xdir=-1;
+                }else if (x - getXDist()<0){
+                    xdir=1;
+                }
+            }
+
+            if(y!=0) {
+                if (y - getYDist() > 0) {
+                    ydir = -1;
+                } else if (y - getYDist() < 0) {
+                    ydir = 1;
+                }
+            }
+            //chassis.arcadeDrive(,-,0,speed,gyr.getRotation());;
+            telemetry.addData("gyr",gyr.getRotation());
+            chassis.arcadeDrive(xdir,ydir,0,speed,gyr.getRotation());;
+            telemetry.addData("diffx",Math.abs(x - getXDist()));
+            telemetry.addData("diffy",Math.abs(y - getYDist()));
+            telemetry.update();
+        }
+        chassis.setMotors(0,0,0,0);
+    }
+    public void rotatePeroMejor(int dir) {
+
+        while (Math.abs(gyr.getRotation()-dir)>5) {
+            chassis.arcadeDrive(0,0,0,0.7,gyr.getRotation());;
+            telemetry.update();
+        }
+    }
+
 
     public void goTo(int x, int y) {
 //        resetEncoders();
