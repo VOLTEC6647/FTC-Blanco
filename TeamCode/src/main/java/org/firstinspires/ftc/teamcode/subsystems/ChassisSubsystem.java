@@ -46,6 +46,8 @@ public class ChassisSubsystem {
 
     int angularError = 0;
 
+    public boolean autonomous = false;
+
 
     public void rotateAngle(int angle) {
 
@@ -146,6 +148,14 @@ public class ChassisSubsystem {
                   double angularThreshold = 10;
                   if(Math.abs(angularError)>angularThreshold){
                       r=angularError*0.5;
+                      if(autonomous){
+                          if(r>0){
+                              r=0.75;
+                          }
+                          if(r<0){
+                              r=-0.75;
+                          }
+                      }
                   }
                   /*
                   angularError = calculateRotation((int) degrees, (int) targetAngle);

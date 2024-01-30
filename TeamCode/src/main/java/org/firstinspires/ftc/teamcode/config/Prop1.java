@@ -6,13 +6,12 @@ import com.qualcomm.robotcore.util.ReadWriteFile;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
 @Autonomous(group = "config")
-public class PropL extends LinearOpMode {
+public class Prop1 extends LinearOpMode {
     @Override
     public void runOpMode() {
         File myFileName = AppUtil.getInstance().getSettingsFile("prop.txt");
-        ReadWriteFile.writeFile(myFileName, "l");
+        ReadWriteFile.writeFile(myFileName, "1");
     }
 }

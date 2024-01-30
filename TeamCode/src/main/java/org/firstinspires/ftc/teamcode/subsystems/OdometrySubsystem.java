@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 
+import androidx.annotation.Nullable;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -8,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.text.BreakIterator;
 import java.time.Year;
+import java.util.Optional;
 
 public class OdometrySubsystem {
     public int fieldX;
@@ -68,10 +71,10 @@ public class OdometrySubsystem {
     final double WHEELCIRCUMFERENCE = 4.8 * Math.PI;
     final int TICKS = 2000;
     public double getXDist() {
-        return (xEncoder.getCurrentPosition() * WHEELCIRCUMFERENCE) / TICKS;
+        return (-xEncoder.getCurrentPosition() * WHEELCIRCUMFERENCE*encoderOrientationX) / TICKS;
     }
     public double getYDist() {
-        return (yEncoder.getCurrentPosition() * WHEELCIRCUMFERENCE) / TICKS;
+        return (-yEncoder.getCurrentPosition() * WHEELCIRCUMFERENCE*encoderOrientationY) / TICKS;
     }
     public void printEncoders() {
         telemetry.addData("xEncoder", xEncoder.getCurrentPosition());
@@ -81,40 +84,61 @@ public class OdometrySubsystem {
     }
     final double KP = 0.05;
 
-    public void goToYolo(int x, int y, double speed) {
+    public void goToYolo(int x, int y, double speed, Boolean persist) {
         resetEncoders();
         while (Math.abs(y - getYDist())+Math.abs(x - getXDist()) > 5) {
+            telemetry.addData("state","moving");
             int xdir=0;
             int ydir=0;
+            int xOffset = 1;
+            int yOffset = 1;
             if(x!=0){
                 if (x - getXDist()>0){
-                    xdir=-1;
-                }else if (x - getXDist()<0){
                     xdir=1;
+                }else if (x - getXDist()<0){
+                    xdir=-1;
                 }
             }
 
             if(y!=0) {
                 if (y - getYDist() > 0) {
-                    ydir = -1;
-                } else if (y - getYDist() < 0) {
                     ydir = 1;
+                } else if (y - getYDist() < 0) {
+                    ydir = -1;
                 }
+            }
+            double multiplier = 1;
+            if(Math.abs(y - getYDist())+Math.abs(x - getXDist()) > 10){
+
             }
             //chassis.arcadeDrive(,-,0,speed,gyr.getRotation());;
             telemetry.addData("gyr",gyr.getRotation());
-            chassis.arcadeDrive(xdir,ydir,0,speed,gyr.getRotation());;
             telemetry.addData("diffx",Math.abs(x - getXDist()));
             telemetry.addData("diffy",Math.abs(y - getYDist()));
+            chassis.arcadeDrive(xdir,ydir,0,speed,gyr.getRotation());
             telemetry.update();
         }
-        chassis.setMotors(0,0,0,0);
+        if(!persist){
+            chassis.setMotors(0,0,0,0);
+        }
     }
+    private int encoderOrientationX = 1;
+    private int encoderOrientationY = 1;
     public void rotatePeroMejor(int dir) {
-
+        chassis.targetAngle=dir;
         while (Math.abs(gyr.getRotation()-dir)>5) {
+            telemetry.addData("state","rotating");
             chassis.arcadeDrive(0,0,0,0.7,gyr.getRotation());;
             telemetry.update();
+        }
+        //recuerdenme cambiar esto ántes del nacional
+        if(dir==0){
+            encoderOrientationX=1;
+            encoderOrientationY=1;
+        }
+        if(dir==180){
+            encoderOrientationX=-1;
+            encoderOrientationY=-1;
         }
     }
 

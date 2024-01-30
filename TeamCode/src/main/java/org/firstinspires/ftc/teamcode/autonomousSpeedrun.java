@@ -80,14 +80,14 @@ public class autonomousSpeedrun extends LinearOpMode {
         if(team!=""&&robotPosition!=""&&prop!=""&&auto!="disabled") {
             elevator.DebugSpeed=0.6;
             elevator.goUp();
-            odometry.goToYolo(10,10,0.5);
+            odometry.goToYolo(10,10,0.5,false);
             elevator.stop();
             arm.setPosition(0.3);
             arm.updateArm();
         }else{
             //odometry.goToYolo(0,20,0.5);
 
-            odometry.goToYolo(-125,0,0.5);
+            odometry.goToYolo(-125,0,0.5,false);
             //odometry.goToYolo(-240,0,0.5);
 
             //chassis.targetAngle+=;

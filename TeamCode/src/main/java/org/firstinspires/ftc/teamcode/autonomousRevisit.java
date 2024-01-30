@@ -49,6 +49,7 @@ public class autonomousRevisit extends LinearOpMode {
     public void runOpMode() {
 
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
+        intake = hardwareMap.get(DcMotor.class, "intake");
 
         camera = OpenCVSubsystem.getInstance(hardwareMap, telemetry);
         chassis = ChassisSubsystem.getInstance(hardwareMap,telemetry);
@@ -57,6 +58,7 @@ public class autonomousRevisit extends LinearOpMode {
         odometry = OdometrySubsystem.getInstance(hardwareMap, chassis,gyroscope, telemetry);
         arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
 
+        chassis.autonomous=true;
 
         odometry.resetEncoders();
 
@@ -69,23 +71,47 @@ public class autonomousRevisit extends LinearOpMode {
 
         loadparameters();
         telemetry.update();
+
+        //intake.setPower(0.3);
+        //utils.waitMs(2000, telemetry);
+        //intake.setPower(0);
         waitForStart();
 
         //arm.open();
 
+
         if(team!=""&&robotPosition!=""&&prop!=""&&auto!="disabled") {
+            /*
             elevator.DebugSpeed=0.6;
             elevator.goUp();
             odometry.goToYolo(10,10,0.5);
             elevator.stop();
             arm.setPosition(0.3);
             arm.updateArm();
+            */
+
+            //point to prop
+            odometry.goToYolo(-20,0,0.5,false);
+            odometry.rotatePeroMejor(90);
+            odometry.rotatePeroMejor(180);
+            //intake.setPower(0.05);
+            odometry.goToYolo(-45,0,0.5,false);
+            //intake.setPower(0.05);
+            odometry.goToYolo(0,7,0.5,false);
+            //intake.setPower(0.1);
+            //utils.waitMs(500, telemetry);
+            utils.intakeTime(1000,telemetry,intake,0.5);
+            intake.setPower(0);
+            odometry.rotatePeroMejor(0);
+
+
+
         }else{
             arm.close();
-            odometry.goToYolo(0,-64,0.5);
+            //odometry.goToYolo(0,-64,0.5);
 
             //odometry.goToYolo(-125,0,0.5);
-            odometry.goToYolo(-222,0,0.5);
+            //odometry.goToYolo(-222,0,0.5);
 
             //chassis.targetAngle+=;
             //odometry.goToYolo(0,-20,0.3);

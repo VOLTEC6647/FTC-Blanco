@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class utils {
     public static int shortestPathDirection(int angleA, int angleB) {
         int difference = Math.abs(angleA - angleB);
@@ -21,6 +26,25 @@ public class utils {
             return forwardRotation;
         } else {
             return -backwardRotation;
+        }
+    }
+
+    private static ElapsedTime time = new ElapsedTime();
+    public static void waitMs(int ms, Telemetry telemetry){
+        time.reset();
+        time.startTime();
+        while (time.milliseconds()<ms){
+            telemetry.addData("time",ms);
+            telemetry.update();
+        }
+    }
+    public static void intakeTime(int ms, Telemetry telemetry, DcMotor intake,double power){
+        time.reset();
+        time.startTime();
+        while (time.milliseconds()<ms){
+            intake.setPower(power);
+            telemetry.addData("time",ms);
+            telemetry.update();
         }
     }
 }
