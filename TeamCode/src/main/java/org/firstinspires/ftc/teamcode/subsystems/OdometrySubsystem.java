@@ -74,22 +74,25 @@ public class OdometrySubsystem {
         telemetry.addData("X: ", getXDist());
         telemetry.addData("Y: ", getYDist());
     }
-    final double KP = 0.03;
+    final double KP = 0.02;
 
     public boolean goTo(int x, int y) {
         double yError = y - getYDist() * -1;
         double xError = x - getXDist() * 1;
         double ySpeed = yError * KP;
         double xSpeed = xError * KP;
-        telemetry.addData("yError", yError);
-        telemetry.addData("xError: ", xError);
-        telemetry.addData("poss", getYDist());
+//        telemetry.addData("yError", yError);
+//        telemetry.addData("xError: ", xError);
+//        telemetry.addData("poss", getYDist());
+//
+//        chassis.moveY(ySpeed);
+//        chassis.moveX(xSpeed);
+//        telemetry.addData("aaaa", xError);
+//        telemetry.addData("aaaayyy", yError);
+//        telemetry.update();
 
-        chassis.moveY(ySpeed);
-        chassis.moveX(xSpeed);
-        telemetry.addData("aaaa", xError);
-        telemetry.addData("aaaayyy", yError);
-        telemetry.update();
+        //chassis.setMotors(0,0,0,0);
+        //resetEncoders();
 
         return (Math.abs(xError) + Math.abs(yError) > 5) ? true : false;
     }

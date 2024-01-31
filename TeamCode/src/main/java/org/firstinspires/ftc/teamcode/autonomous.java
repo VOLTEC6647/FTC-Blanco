@@ -36,19 +36,13 @@ public class autonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
-        //imu = hardwareMap.get(IMU.class, "imu");
-        if (Parameters.robot == "marvin") {
-            intake = hardwareMap.get(DcMotor.class, "intake");
-        }
 
         camera = OpenCVSubsystem.getInstance(hardwareMap, telemetry);
         chassis = ChassisSubsystem.getInstance(hardwareMap, telemetry);
         gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         elevator = ElevatorSubsystem.getInstance(hardwareMap, telemetry);
         odometry = OdometrySubsystem.getInstance(hardwareMap, chassis, telemetry);
-        arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
         pivot = PivotSubsystem.getInstance(hardwareMap, telemetry);
 
         odometry.resetEncoders();
@@ -62,8 +56,8 @@ public class autonomous extends LinearOpMode {
             ///////////////////////////////////////////////////////////
             boolean dolor = true;
 
-                //final int objectSide = camera.findObjectSide();
-                int objectSide = 1;
+                final int objectSide = camera.findObjectSide();
+
                 pivot.close();
                 sleep(50);
                 pivot.down();
@@ -191,8 +185,8 @@ public class autonomous extends LinearOpMode {
                     break;
                 }
 
-            elevator.goUp();
-            telemetry.addData("object side: ", objectSide);
+            //elevator.goUp();
+            telemetry.addData("object side: ", camera.findObjectSide());
 
             telemetry.update();
         }
