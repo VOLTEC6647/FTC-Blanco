@@ -92,7 +92,7 @@ public class OpenCVSubsystem {
             Imgproc.cvtColor(mat,bgrImage, Imgproc.COLOR_GRAY2RGB);
             Imgproc.line(bgrImage,centroid,centroid,new Scalar(0,255,0),10);
             //Imgproc.rectangle(input
-            //  new Point(input.cols()/4,));
+            //new Point(input.cols()/4,));
             return bgrImage;
         }
 

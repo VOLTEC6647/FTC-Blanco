@@ -138,24 +138,6 @@ public class Chassis extends LinearOpMode {
         }else{
             speed=baseSpeed;
         }
-
-        if(controller2.x){
-            if(controller1.back){
-                intake.setPower(-1);
-            }else {
-                intake.setPower(1);
-            }
-        }else if(controller2.b){
-            if(!controller1.back){
-                intake.setPower(-1);
-            }else {
-                intake.setPower(1);
-            }
-        }else {
-            intake.setPower(0);
-        }
-
-
     }
     void IMUMethods(){
         orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -169,7 +151,7 @@ public class Chassis extends LinearOpMode {
 
         }
     }
-    void ArmMethods(ArmSubsystem arm, PivotSubsystem pivot){
+    /*void ArmMethods(ArmSubsystem arm, PivotSubsystem pivot){
 
         if(info.name=="gobilda"){
             arm.going_down =Chassis.controller2.left_stick_y < -0.2;
@@ -230,15 +212,11 @@ public class Chassis extends LinearOpMode {
         }
 
 
-    }
+    }*/
 
     @Override
     public void runOpMode() {
-        //this.telemetry = telemetry;
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
-        //imu = hardwareMap.get(IMU.class, "imu");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-
 
         //control_Hub.setConstant(3);
 
@@ -249,22 +227,7 @@ public class Chassis extends LinearOpMode {
         //Odometry odometry = Odometry.getInstance(hardwareMap,chassis);
         GyroscopeSubsystem gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         DroneLauncherSubsystem launcher = DroneLauncherSubsystem.getInstance(hardwareMap,telemetry);
-        PivotSubsystem pivot = null;
-        ArmSubsystem arm = null;
-        if(info.name=="rev") {
-            pivot = PivotSubsystem.getInstance(hardwareMap, telemetry);
-        }else{
-            arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
-        }
-        /////////////////////////////
-        //orientation=imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        //GyroscopeSubsystem gyroscope=GyroscopeSubsystem.getInstance();
-
-        //telemetry.addData("GyroX", orientation.secondAngle);
-        //telemetry.addData("GyroY", AndroidOrientation().getAngle().secondPosition());
-        ////telemetry.update();
-
+        PivotSubsystem pivot = PivotSubsystem.getInstance(hardwareMap,telemetry);
 
         //launcher.reset();
         telemetry.update();
@@ -272,12 +235,6 @@ public class Chassis extends LinearOpMode {
         waitForStart();
 
         chassis.updateTargetAngle();
-
-        if(info.name=="gobilda"){
-            arm.setZero();
-            arm.updateArm();
-        }
-
 
         //arm.setZero();
 
@@ -294,19 +251,15 @@ public class Chassis extends LinearOpMode {
 
             ElevatorMethods(elevator);
 
-            if(info.name=="gobilda") {
-                ArmMethods(arm, pivot);
-            }else{
-                pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.dpad_right, this.gamepad2.left_bumper, this.gamepad2.right_bumper);
-            }
+            pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.dpad_right, this.gamepad2.left_bumper, this.gamepad2.right_bumper);
 
-
+            telemetry.addData("posicion pinza: ", pivot.servoPivot.getPosition());
             telemetry.update();
 
             if (controller2.y&&!(controller2.start||controller2.back)) {
                 launcher.launch();
             } else {
-                //launcher.reset();
+                launcher.reset();
             }
 
 
