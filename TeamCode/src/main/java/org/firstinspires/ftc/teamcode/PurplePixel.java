@@ -58,9 +58,13 @@ public class PurplePixel extends LinearOpMode {
                 int objectSide = camera.findObjectSide();
 
                 //pivot.close();
+                pivot.down();
+
                 //sleep(50);
                 //pivot.down();
+
                 odometry.resetEncoders();
+                gyroscope.reset();
 
                 if (objectSide == 1) {
 
@@ -81,24 +85,30 @@ public class PurplePixel extends LinearOpMode {
 
                     dolor = true;
                     while (dolor) {
-                        dolor = odometry.goTo(28,0);
+                        dolor = odometry.goTo(30,0);
                     }
                     chassis.setMotors(0,0,0,0);
                     odometry.resetEncoders();
 
                     dolor = true;
                     while (dolor) {
-                        dolor = odometry.goTo(0,5);
+                        dolor = odometry.goTo(0,27);
                     }
                     chassis.setMotors(0,0,0,0);
                     odometry.resetEncoders();
 
-                    sleep(300);
-                    pivot.middle();
                     sleep(1000);
                     pivot.open();
-                    sleep(1000);
-                    pivot.down();
+
+                    sleep(3000);
+                    elevator.goUp();
+
+                    dolor = true;
+                    while (dolor) {
+                        dolor = odometry.goTo(0,-26);
+                    }
+                    chassis.setMotors(0,0,0,0);
+                    odometry.resetEncoders();
 
                     break;
                 } else if (objectSide == 2) {
@@ -111,19 +121,19 @@ public class PurplePixel extends LinearOpMode {
 
                     dolor = true;
                     while(dolor) {
-                        dolor = odometry.goTo(30,0);
+                        dolor = odometry.goTo(16,0);
                     }
                     chassis.setMotors(0,0,0,0);
                     odometry.resetEncoders();
 
                     dolor = true;
                     while(dolor) {
-                        dolor = odometry.goTo(0,5);
+                        dolor = odometry.goTo(0,15);
                     }
                     chassis.setMotors(0,0,0,0);
                     odometry.resetEncoders();
 
-                    dolor = true;
+                    /*dolor = true;
                     while(dolor) {
                         dolor = odometry.rotateTo(gyroscope.getRotation(), -90);
                     }
@@ -131,19 +141,19 @@ public class PurplePixel extends LinearOpMode {
                     gyroscope.reset();
                     odometry.resetEncoders();
 
+
                     dolor = true;
                     while(dolor) {
                         dolor = odometry.goTo(0,10);
                     }
                     chassis.setMotors(0,0,0,0);
-                    odometry.resetEncoders();
+                    odometry.resetEncoders();*/
 
-                    sleep(300);
-                    pivot.middle();
                     sleep(1000);
                     pivot.open();
-                    sleep(1000);
-                    pivot.down();
+
+                    sleep(2000);
+                    elevator.goUp();
 
                     dolor = true;
                     while(dolor) {
@@ -152,21 +162,8 @@ public class PurplePixel extends LinearOpMode {
                     chassis.setMotors(0,0,0,0);
                     odometry.resetEncoders();
 
-                    dolor = true;
-                    while(dolor) {
-                        dolor = odometry.goTo(30,0);
-                    }
-                    chassis.setMotors(0,0,0,0);
-
-                    dolor = true;
-                    while(dolor) {
-                        dolor = odometry.goTo(0,100);
-                    }
-                    chassis.setMotors(0,0,0,0);
-                    odometry.resetEncoders();
-
                     break;
-                } else if (objectSide == 3) {
+                } else {
                     dolor = true;
                     while (dolor) {
                         dolor = odometry.goTo(0,45);
@@ -224,7 +221,7 @@ public class PurplePixel extends LinearOpMode {
                     chassis.setMotors(0,0,0,0);
                     odometry.resetEncoders();
 
-                    break;
+
                 }
 
 

@@ -74,7 +74,7 @@ public class OdometrySubsystem {
         telemetry.addData("X: ", getXDist());
         telemetry.addData("Y: ", getYDist());
     }
-    final double KP = 0.035;
+    final double KP = 0.039;
 
     public boolean goTo(int x, int y) {
         y = -y;
