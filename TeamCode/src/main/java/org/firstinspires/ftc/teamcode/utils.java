@@ -34,8 +34,9 @@ public class utils {
         time.reset();
         time.startTime();
         while (time.milliseconds()<ms){
-            telemetry.addData("time",ms);
-            telemetry.update();
+            //telemetry.addData("state","waiting "+ms);
+            //telemetry.addData("time",ms);
+            //telemetry.update();
         }
     }
     public static void intakeTime(int ms, Telemetry telemetry, DcMotor intake,double power){

@@ -41,10 +41,7 @@ public class Chassis extends LinearOpMode {
     public double gyr;
 
     private boolean mix = true;
-
-    public ChassisSubsystem chassis;
-
-    void ElevatorMethods(ElevatorSubsystem elevator){
+    void ElevatorMethods(ElevatorSubsystem elevator, ChassisSubsystem chassis){
         /*
         if(controller1.right_trigger>0.1){
             elevator.goUp(controller1.right_trigger);
@@ -81,6 +78,7 @@ public class Chassis extends LinearOpMode {
                 telemetry.addData("lsthikkk",controller2.right_stick_y);
                 if (controller2.right_stick_y > 0.3) {
                     elevator.goDown();
+                    elevator.holding = false;
                     if(controller2.y){
                         elevator.holding = true;
                     }
@@ -88,12 +86,14 @@ public class Chassis extends LinearOpMode {
                 } else if (controller2.right_stick_y < -0.3) {
                     elevator.goUp();
                     elevator.holding = false;
+                }else{
+                    elevator.stop();
                 }
             }else if(elevator.holding){
-                elevator.DebugSpeed=0.6;
-                elevator.goUp();
-            }
-            else {
+                elevator.DebugSpeed=0.4;
+                elevator.goDown();
+                chassis.REnabled=false;
+            }else {
                 elevator.stop();
             }
         }
@@ -196,7 +196,7 @@ public class Chassis extends LinearOpMode {
 
             } else if (controller2.dpad_down) {
                 if(info.name=="gobilda") {
-                    arm.setPosition(0.3);
+                    arm.setPosition(0.4);
                     arm.updateArm();
                 }else {
                     pivot.up();
@@ -310,7 +310,7 @@ public class Chassis extends LinearOpMode {
 
             ChassisMethods(chassis,gyroscope);
 
-            ElevatorMethods(elevator);
+            ElevatorMethods(elevator,chassis);
 
             if(info.name=="gobilda") {
                 ArmMethods(arm, pivot);
@@ -323,6 +323,7 @@ public class Chassis extends LinearOpMode {
 
             if (controller2.y&&!(controller2.start||controller2.back)) {
                 launcher.launch();
+                chassis.doOverride=true;
             } else {
                 //launcher.reset();
             }

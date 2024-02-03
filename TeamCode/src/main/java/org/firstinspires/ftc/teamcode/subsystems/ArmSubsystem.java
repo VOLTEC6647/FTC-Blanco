@@ -22,7 +22,7 @@ public class ArmSubsystem {
 
     private Telemetry telemetry;
 
-    private Servo axis;
+    public Servo axis;
 
     public double angle=0;
 

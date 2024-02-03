@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utils;
 
 import java.text.BreakIterator;
 import java.time.Year;
@@ -85,9 +87,11 @@ public class OdometrySubsystem {
     final double KP = 0.05;
 
     public void goToYolo(int x, int y, double speed, Boolean persist) {
+        time.reset();
+        time.startTime();
         resetEncoders();
-        while (Math.abs(y - getYDist())+Math.abs(x - getXDist()) > 5) {
-            telemetry.addData("state","moving");
+        while (Math.abs(y - getYDist())+Math.abs(x - getXDist()) > 8&&time.milliseconds()<timeout) {
+            telemetry.addData("state","moving "+x+"-"+y);
             int xdir=0;
             int ydir=0;
             int xOffset = 1;
@@ -108,13 +112,13 @@ public class OdometrySubsystem {
                 }
             }
             double multiplier = 1;
-            if(Math.abs(y - getYDist())+Math.abs(x - getXDist()) > 10){
-
+            if(Math.abs(y - getYDist())+Math.abs(x - getXDist()) < 20){
+                speed=0.4;
             }
             //chassis.arcadeDrive(,-,0,speed,gyr.getRotation());;
-            telemetry.addData("gyr",gyr.getRotation());
             telemetry.addData("diffx",Math.abs(x - getXDist()));
             telemetry.addData("diffy",Math.abs(y - getYDist()));
+            telemetry.addData("gyr",gyr.getRotation());
             chassis.arcadeDrive(xdir,ydir,0,speed,gyr.getRotation());
             telemetry.update();
         }
@@ -122,14 +126,31 @@ public class OdometrySubsystem {
             chassis.setMotors(0,0,0,0);
         }
     }
+
+    public int timeout=5000;
     private int encoderOrientationX = 1;
     private int encoderOrientationY = 1;
+
+    private static ElapsedTime time = new ElapsedTime();
+
     public void rotatePeroMejor(int dir) {
+        time.reset();
+        time.startTime();
         chassis.targetAngle=dir;
-        while (Math.abs(gyr.getRotation()-dir)>5) {
-            telemetry.addData("state","rotating");
-            chassis.arcadeDrive(0,0,0,0.7,gyr.getRotation());;
-            telemetry.update();
+        while (Math.abs(gyr.getRotation()-dir)>4&&time.milliseconds()<timeout) {
+            while (Math.abs(gyr.getRotation() - dir) > 4&&time.milliseconds()<timeout) {
+                telemetry.addData("state", "rotating "+dir);
+                telemetry.addData("timeout",timeout-time.milliseconds());
+
+                if(Math.abs(gyr.getRotation() - dir) < 20){
+                    chassis.arcadeDrive(0, 0, 0, 0.4, gyr.getRotation());
+                }else{
+                    chassis.arcadeDrive(0, 0, 0, 0.7, gyr.getRotation());
+                }
+
+                telemetry.update();
+            }
+            utils.waitMs(100,telemetry);
         }
         //recuerdenme cambiar esto ántes del nacional
         if(dir==0){
@@ -140,6 +161,34 @@ public class OdometrySubsystem {
             encoderOrientationX=-1;
             encoderOrientationY=-1;
         }
+    }
+
+    public void rotatePeroExacto(int dir) {
+        rotatePeroMejor(dir);
+        /*
+        time.reset();
+        time.startTime();
+        chassis.targetAngle=dir;
+        while (Math.abs(gyr.getRotation()-dir)>5&&time.milliseconds()<timeout) {
+            while (Math.abs(gyr.getRotation() - dir) > 5&&time.milliseconds()<timeout) {
+                telemetry.addData("state", "rotating exact");
+                telemetry.addData("timeout",timeout-time.milliseconds());
+                chassis.arcadeDrive(0, 0, 0, 0.3, gyr.getRotation());
+                ;
+                telemetry.update();
+            }
+            utils.waitMs(50,telemetry);
+        }
+        //recuerdenme cambiar esto ántes del nacional
+        if(dir==0){
+            encoderOrientationX=1;
+            encoderOrientationY=1;
+        }
+        if(dir==180){
+            encoderOrientationX=-1;
+            encoderOrientationY=-1;
+        }
+        */
     }
 
 

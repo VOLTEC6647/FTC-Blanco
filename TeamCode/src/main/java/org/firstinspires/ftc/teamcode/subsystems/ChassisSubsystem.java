@@ -53,6 +53,8 @@ public class ChassisSubsystem {
 
     }
 
+    public Boolean doOverride = false;
+
     public ChassisSubsystem(HardwareMap hardwareMap, Telemetry telemetry){
         this.hardwareMap=hardwareMap;
         this.telemetry = telemetry;
@@ -146,6 +148,9 @@ public class ChassisSubsystem {
                   angularError = calculateRotation((int) degrees, (int) targetAngle);
                   telemetry.addData("angularError",angularError);
                   double angularThreshold = 10;
+                  if (autonomous) {
+                      angularThreshold = 5;
+                  }
                   if(Math.abs(angularError)>angularThreshold){
                       r=angularError*0.5;
                       if(autonomous){
@@ -197,8 +202,11 @@ public class ChassisSubsystem {
         telemetry.addData("radians", Math.toRadians(degrees));
         telemetry.addData("cosine", cosine);
         telemetry.addData("sine", sine);
-        x = xmod;
-        y = ymod;
+        if(!doOverride){
+            x = xmod;
+            y = ymod;
+        }
+
         telemetry.addData("xmod", xmod);
         telemetry.addData("ymod", ymod);
         telemetry.addData("pi", Math.PI);

@@ -4,16 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OdometrySubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.OpenCVSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OpenCVSubsystemmm;
 import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Parameters;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 @Autonomous
 public class autonomousSpeedrun extends LinearOpMode {
-    private OpenCVSubsystem camera;
+    private OpenCVSubsystemmm camera;
     private ChassisSubsystem chassis;
     private GyroscopeSubsystem gyroscope;
     private ElevatorSubsystem elevator;
@@ -54,7 +51,7 @@ public class autonomousSpeedrun extends LinearOpMode {
 
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
 
-        camera = OpenCVSubsystem.getInstance(hardwareMap, telemetry);
+        camera = OpenCVSubsystemmm.getInstance(hardwareMap, telemetry);
         chassis = ChassisSubsystem.getInstance(hardwareMap,telemetry);
         gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
         elevator = ElevatorSubsystem.getInstance(hardwareMap,telemetry);

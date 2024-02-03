@@ -68,7 +68,7 @@ public class ElevatorSubsystem {
         }
     }
     public void goUp(){
-        if (true&&elevator1.getCurrentPosition()>maxzone) {
+        if (false&&elevator1.getCurrentPosition()>maxzone) {
             elevator1.setPower(slowSpeed);
             elevator2.setPower(-slowSpeed);
             telemetry.addData("Zelevator","minzone");
@@ -87,7 +87,7 @@ public class ElevatorSubsystem {
         elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if((-elevator1.getCurrentPosition()<0||elevator2.getCurrentPosition()<0)){
+        if((-elevator1.getCurrentPosition()>0||elevator2.getCurrentPosition()>0)){
             resetEncoders();
         }
     }
