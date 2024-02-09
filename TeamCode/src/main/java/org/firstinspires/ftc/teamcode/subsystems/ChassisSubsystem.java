@@ -116,6 +116,27 @@ public class ChassisSubsystem {
           setMotors(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
       }
 
+    private double pidIt(double currentAngle, double r) {
+        double Kp = 0.5; // Proportional gain. Adjust this value based on tuning.
+        double angularThreshold = autonomous ? 5 : 10; // Different thresholds based on mode
+        double angularError = calculateRotation((int) currentAngle, (int) targetAngle);
+
+
+        // Only adjust if error is above threshold
+        if (Math.abs(angularError) > angularThreshold) {
+            r = angularError * Kp; // Proportional control
+
+            // For autonomous mode, limit the rotation speed
+            if (autonomous) {
+                if (r > 0) r = 0.75;
+                else if (r < 0) r = -0.75;
+            }
+        } else {
+            r = 0; // No adjustment needed
+        }
+        return r;
+    }
+
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
 
         telemetry.addData("targetAngle",targetAngle);
@@ -132,51 +153,26 @@ public class ChassisSubsystem {
           if(Math.abs(y)<0.15){
               y=0;
           }
-          if(REnabled) {
+          if (REnabled) {
               lastDir = degrees;
-              if (Math.abs(r)>0.1||(System.currentTimeMillis() - timeOffset < 500&&true)) {
-
-                  telemetry.addData("target",targetAngle);
-                  telemetry.addData("gyrro",degrees);
+              // Condition to decide if immediate correction is needed or if PID should be applied
+              if (Math.abs(r) > 0.1 || (System.currentTimeMillis() - timeOffset < 500 && true)) {
+                  telemetry.addData("target", targetAngle);
+                  telemetry.addData("gyro", degrees);
 
                   targetAngle = degrees;
-                    if(Math.abs(r)>0.1){
-                        timeOffset = System.currentTimeMillis();
-                    }
-
-              }else{
-                  angularError = calculateRotation((int) degrees, (int) targetAngle);
-                  telemetry.addData("angularError",angularError);
-                  double angularThreshold = 10;
-                  if (autonomous) {
-                      angularThreshold = 5;
+                  if (Math.abs(r) > 0.1) {
+                      timeOffset = System.currentTimeMillis();
                   }
-                  if(Math.abs(angularError)>angularThreshold){
-                      r=angularError*0.5;
-                      if(autonomous){
-                          if(r>0){
-                              r=0.75;
-                          }
-                          if(r<0){
-                              r=-0.75;
-                          }
-                      }
-                  }
-                  /*
-                  angularError = calculateRotation((int) degrees, (int) targetAngle);
-                  final double KPPP = 0.03;
-                  double errror = targetAngle - degrees;
-                  double speeed = errror * KPPP;
+              } else {
+                  // Use the new PID function for proportional control
+                  r=pidIt(degrees,r);
 
-                  telemetry.addData("angularError",angularError);
-                  double angularThreshold = 10;
-                  //if(Math.abs(angularError)>angularThreshold) {
-                  //}
-                  r = speeed;
+                  telemetry.addData("angularError", angularError);
+                  telemetry.addData("correction", r); // Show the correction value being applied
 
-                   */
+
               }
-
           }
 
         //telemetry.addData("x", x);
