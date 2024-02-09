@@ -110,6 +110,10 @@ public class Chassis extends LinearOpMode {
             }
 
         }
+        if(controller1.back&&controller1.x){
+            chassis.doOverride=true;
+            chassis.REnabled=false;
+        }
         if(controller1.y&&false){
             chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             chassis.FrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -164,6 +168,11 @@ public class Chassis extends LinearOpMode {
             intake.setPower(0);
         }
 
+        if((controller1.a||controller2.a)&&!controller1.back){
+            chassis.snap = true;
+        }else{
+            chassis.snap = false;
+        }
 
     }
     void IMUMethods(){

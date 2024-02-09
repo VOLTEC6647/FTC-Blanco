@@ -48,6 +48,8 @@ public class ChassisSubsystem {
 
     public boolean autonomous = false;
 
+    public boolean snap = false;
+
 
     public void rotateAngle(int angle) {
 
@@ -140,10 +142,10 @@ public class ChassisSubsystem {
       public void arcadeDrive(double x, double y, double r, double speed, double degrees) {
 
         telemetry.addData("targetAngle",targetAngle);
-        if(Math.abs(targetAngle-180)<20){
+        if(Math.abs(targetAngle-180)<45&&snap){
             targetAngle=180;
         }
-        if(Math.abs(targetAngle)<20){
+        if(Math.abs(targetAngle)<45&&snap){
             targetAngle=0;
         }
 
