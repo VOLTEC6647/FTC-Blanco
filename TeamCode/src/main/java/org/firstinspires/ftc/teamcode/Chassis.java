@@ -113,6 +113,7 @@ public class Chassis extends LinearOpMode {
         if(controller1.back&&controller1.x){
             chassis.doOverride=true;
             chassis.REnabled=false;
+            //control_Hub.setConstant();
         }
         if(controller1.y&&false){
             chassis.FrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

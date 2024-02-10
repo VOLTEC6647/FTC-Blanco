@@ -57,10 +57,10 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
-    private static final String TFOD_MODEL_ASSET = "castlev3.tflite";
+    private static final String TFOD_MODEL_ASSET = "castlev4.tflite";
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
-    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/castlev3.tflite";
+    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/castlev4.tflite";
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
             "blueProp",
@@ -135,8 +135,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                 .setModelLabels(LABELS)
                 .setIsModelTensorFlow2(true)
                 .setIsModelQuantized(true)
-                .setModelInputSize(2000)
-                .setModelAspectRatio(16.0 / 9.0)
+                .setModelInputSize(640)
+                .setModelAspectRatio(1)
 
                 .build();
 
@@ -151,7 +151,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        builder.setCameraResolution(new Size(1280, 720));
+        builder.setCameraResolution(new Size(640, 640));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         builder.enableLiveView(true);
