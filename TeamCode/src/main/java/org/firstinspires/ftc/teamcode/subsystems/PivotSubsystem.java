@@ -18,8 +18,8 @@ public class PivotSubsystem {
     private final double PIVOT_DOWN = 0.5;
 
     public PivotSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
-        this.servoClaw = hardwareMap.get(Servo.class, "claw");
-        this.servoPivot = hardwareMap.get(Servo.class, "pivot");
+        //this.servoClaw = hardwareMap.get(Servo.class, "claw");
+        //this.servoPivot = hardwareMap.get(Servo.class, "pivot");
         this.telemetry = telemetry;
     }
 

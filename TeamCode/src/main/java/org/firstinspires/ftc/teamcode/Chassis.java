@@ -216,7 +216,7 @@ public class Chassis extends LinearOpMode {
         } else if(controller2.left_bumper) {
             if(info.name=="rev"){
                 pivot.close();
-            }else{
+            }else {
                 arm.close();
             }
         }

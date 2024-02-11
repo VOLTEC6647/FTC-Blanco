@@ -53,7 +53,7 @@ public class autonomous extends LinearOpMode {
         camera = OpenCVSubsystem.getInstance(hardwareMap, telemetry);
         chassis = ChassisSubsystem.getInstance(hardwareMap,telemetry);
         gyroscope = GyroscopeSubsystem.getInstance(hardwareMap);
-        elevator = ElevatorSubsystem.getInstance(hardwareMap);
+        elevator = ElevatorSubsystem.getInstance(hardwareMap, telemetry);
         odometry = OdometrySubsystem.getInstance(hardwareMap, chassis, telemetry);
         arm = ArmSubsystem.getInstance(hardwareMap, telemetry);
 
@@ -72,9 +72,7 @@ public class autonomous extends LinearOpMode {
 
             odometry.resetEncoders();
 
-            while (dolor) {
-                dolor = odometry.goTo(0,-63);
-            }
+
             chassis.setMotors(0,0,0,0);
             sleep(500);
 

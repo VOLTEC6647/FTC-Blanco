@@ -44,8 +44,8 @@ public class ArmSubsystem {
         return instance;
     }
     public ArmSubsystem(HardwareMap hardwareMap, Telemetry telemetry){
-        this.servoL=hardwareMap.get(Servo.class, "servoL");
-        this.servoR=hardwareMap.get(Servo.class, "servoR");
+    /*    this.servoL=hardwareMap.get(Servo.class, "servoL");
+        this.servoR=hardwareMap.get(Servo.class, "servoR");*/
         this.claw=hardwareMap.get(Servo.class, "claw");
         this.axis=hardwareMap.get(Servo.class, "axis");
         //this.crservoL=hardwareMap.get(CRServo.class, "crservoL");
