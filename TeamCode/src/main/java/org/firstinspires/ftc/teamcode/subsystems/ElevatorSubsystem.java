@@ -31,7 +31,7 @@ public class ElevatorSubsystem {
             instance = new ElevatorSubsystem(hardwareMap,telemetry);
 
         }
-
+        instance.telemetry=telemetry;
         return instance;
     }
     public ElevatorSubsystem(HardwareMap hardwareMap, Telemetry telemetry){
@@ -48,7 +48,6 @@ public class ElevatorSubsystem {
             this.elevator1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             this.elevator2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        this.telemetry=telemetry;
 
         //elevator1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //elevator2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

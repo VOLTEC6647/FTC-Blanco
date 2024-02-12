@@ -4,7 +4,10 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,8 +16,7 @@ import org.firstinspires.ftc.teamcode.Chassis;
 
 public class ArmSubsystem {
     private static ArmSubsystem instance;
-    public Servo servoL;
-    public Servo servoR;
+    public DcMotorEx armMotor;
     public CRServo crservoL;
     public CRServo crservoR;
 
@@ -24,9 +26,10 @@ public class ArmSubsystem {
 
     public Servo axis;
 
-    public double angle=0;
+    public double NotAngle=0;
+    public double NotAxis=0;
 
-    private boolean outside = false;
+    //private boolean outside = false;
 
     public boolean going_down = false;
 
@@ -41,66 +44,97 @@ public class ArmSubsystem {
         if (instance == null) {
             instance = new ArmSubsystem(hardwareMap, telemetry);
         }
+        instance.telemetry = telemetry;
+
+        instance.armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        instance.setZero();
+        instance.updateArm();
+        //instance.armMotor.
+        instance.armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        instance.armMotor.setPower(0.8);
+
+        //default
+        // instance.armMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(10,0.050003,0,0));
+
+        //instance.armMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(20,0.050003,0,0));
+        instance.armMotor.setPositionPIDFCoefficients(30);
+
+        telemetry.addData("ARMP",instance.armMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+        telemetry.addData("Threshhold",instance.armMotor.getTargetPositionTolerance());
+        //default threshhold is 5
+        instance.armMotor.setTargetPositionTolerance(1);
+
+        //telemetry.addData(DcMotorEx)
+
         return instance;
     }
     public ArmSubsystem(HardwareMap hardwareMap, Telemetry telemetry){
-        this.servoL=hardwareMap.get(Servo.class, "servoL");
-        this.servoR=hardwareMap.get(Servo.class, "servoR");
+        this.armMotor=hardwareMap.get(DcMotorEx.class, "armMotor");
         this.claw=hardwareMap.get(Servo.class, "claw");
         this.axis=hardwareMap.get(Servo.class, "axis");
+        this.NotAxis=0.415;
+        this.updateAxis();
         //this.crservoL=hardwareMap.get(CRServo.class, "crservoL");
         //this.crservoR=hardwareMap.get(CRServo.class, "crservoR");
-        this.telemetry = telemetry;
+        //this.telemetry = telemetry;
         servoDelta.startTime();
     }
 
     public void showPositions(){
-        telemetry.addData("servoLl", servoL.getPosition());
-        telemetry.addData("servoRr", servoR.getPosition());
-        //telemetry.addData("crservoL", crservoL.getPower());
-        //telemetry.addData("crservoR", crservoR.getPower());
+        telemetry.addData("armPOS", armMotor.getCurrentPosition());
 
     }
     public void setZero(){
-        angle=0.07;
+        NotAngle=7;
+        NotAxis=0.4;
+        updateArm();
+
         extended = false;
     }
 
     public void setPosition(double position){
-        angle=position;
+        if(position==1){
+            NotAngle=-30;
+            NotAxis=0.3;
+        }
         extended = true;
+        updateArm();
     }
 
     public void updateArm(){
+        armMotor.setTargetPosition((int) NotAngle);
         if(going_down){
-            servoL.setPosition(angle-0.3);
-            servoR.setPosition(servoR.MAX_POSITION-angle+0.3);
+            //servoL.setPosition(angle-0.3);
+            //servoR.setPosition(servoR.MAX_POSITION-angle+0.3);
         }else{
-            servoL.setPosition(angle);
-            servoR.setPosition(servoR.MAX_POSITION-angle);
+            //servoL.setPosition(angle);
+            //servoR.setPosition(servoR.MAX_POSITION-angle);
         }
 
         updateAxis();
     }
     private void updateAxis(){
-        if(angle>0.1){
-            outside=true;
-            axis.setPosition(angle+0.66);
+        if(extended){
+            //outside=true;
+            //axis.setPosition(angle+0.66);
+
         }else {
-            if(!outside){
+
+            if(!extended){
                 //axis.setPosition(0);
             }
-            axis.setPosition(axis.MAX_POSITION);
+            //axis.setPosition(axis.MAX_POSITION);
         }
+        axis.setPosition(NotAxis);
 
     }
     public void open(){
-        claw.setPosition(claw.MIN_POSITION);
+        claw.setPosition(0.55);
         open = true;
 
     }
     public void close(){
-        claw.setPosition(claw.MAX_POSITION);
+        claw.setPosition(0.3);
         open = false;
     }
 

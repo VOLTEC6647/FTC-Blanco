@@ -35,8 +35,8 @@ public class OdometrySubsystem {
 
     public OdometrySubsystem(HardwareMap hardwareMap, ChassisSubsystem chassis,GyroscopeSubsystem gyr, Telemetry telemetry){
         this.hardwareMap=hardwareMap;
-        this.xEncoder = hardwareMap.get(DcMotor.class, "xEncoder");
-        this.yEncoder = hardwareMap.get(DcMotor.class, "BR");
+        this.xEncoder = hardwareMap.get(DcMotor.class, "BR");
+        this.yEncoder = hardwareMap.get(DcMotor.class, "FR");
         this.chassis = chassis;
         this.telemetry = telemetry;
         this.gyr = gyr;

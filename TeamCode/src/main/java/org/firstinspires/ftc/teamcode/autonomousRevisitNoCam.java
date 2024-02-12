@@ -236,7 +236,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 arm.updateArm();
                 telemetry.update();
                 arm.updateArm();
-                telemetry.addData("angle", arm.angle);
+                telemetry.addData("angle", arm.NotAngle);
                 telemetry.update();
                 utils.waitMs(1000, telemetry);
 
@@ -279,7 +279,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 }
                 //arm.setZero();
 
-                arm.axis.setPosition(arm.axis.MAX_POSITION - 0.2);
+                //arm.axis.setPosition(arm.axis.MAX_POSITION - 0.2);
                 //arm.updateArm();
 
                 odometry.goToYolo(0,-10,0.5,false);

@@ -198,7 +198,7 @@ public class Chassis extends LinearOpMode {
         if(!controller2.start){
             if (controller2.dpad_right) {
                 if(info.name=="gobilda") {
-                    arm.setPosition(0.5);
+                    //arm.setPosition(0.5);
                     arm.updateArm();
                 }else {
                     pivot.up();
@@ -206,7 +206,7 @@ public class Chassis extends LinearOpMode {
 
             } else if (controller2.dpad_down) {
                 if(info.name=="gobilda") {
-                    arm.setPosition(0.4);
+                    arm.setPosition(1);
                     arm.updateArm();
                 }else {
                     pivot.up();
@@ -225,7 +225,7 @@ public class Chassis extends LinearOpMode {
 
             }else if(controller2.dpad_up){
                 if(info.name=="gobilda") {
-                    arm.setPosition(0.7);
+                    //arm.setPosition(0.7);
                     arm.updateArm();
                 }else {
 
@@ -249,12 +249,17 @@ public class Chassis extends LinearOpMode {
             }
         }
         if(info.name=="gobilda") {
+            arm.showPositions();
             if (arm.servoDelta.seconds() > 0.5) {
                 arm.servoDelta.reset();
-                arm.showPositions();
+
 
             }
-            telemetry.addData("angle", arm.angle);
+            telemetry.addData("angle", arm.NotAngle);
+        }
+
+        if(controller1.right_trigger>0.1){
+            //arm.
         }
 
 
