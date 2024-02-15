@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sun.tools.javac.code.Types;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utils;
@@ -143,12 +144,16 @@ public class OdometrySubsystem {
                 telemetry.addData("timeout",timeout-time.milliseconds());
 
                 if(Math.abs(gyr.getRotation() - dir) < 20){
-                    chassis.arcadeDrive(0, 0, 0, 0.4, gyr.getRotation());
+                    chassis.arcadeDrive(0, 0, 0, 0.3, gyr.getRotation());
                 }else{
                     chassis.arcadeDrive(0, 0, 0, 0.7, gyr.getRotation());
                 }
 
                 telemetry.update();
+
+                if(!gyr.navx.isConnected()){
+                    throw new IllegalArgumentException("navx unalive");
+                }
             }
             utils.waitMs(100,telemetry);
         }

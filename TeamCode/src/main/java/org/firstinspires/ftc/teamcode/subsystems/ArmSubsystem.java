@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Chassis;
 
 public class ArmSubsystem {
     private static ArmSubsystem instance;
@@ -29,6 +28,8 @@ public class ArmSubsystem {
     public double NotAngle=0;
     public double NotAxis=0;
 
+    public boolean piding = true;
+
     //private boolean outside = false;
 
     public boolean going_down = false;
@@ -38,6 +39,14 @@ public class ArmSubsystem {
     public boolean extended = false;
 
     public boolean open = false;
+
+    public boolean extra = false;
+
+    public double extraAmount = 0;
+
+    public double zeroaxis=0.38;
+
+    public double zeroarm=4;
 
 
     public static ArmSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry){
@@ -51,7 +60,7 @@ public class ArmSubsystem {
         instance.updateArm();
         //instance.armMotor.
         instance.armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        instance.armMotor.setPower(0.8);
+        instance.armMotor.setPower(0.5);
 
         //default
         // instance.armMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(10,0.050003,0,0));
@@ -72,7 +81,8 @@ public class ArmSubsystem {
         this.armMotor=hardwareMap.get(DcMotorEx.class, "armMotor");
         this.claw=hardwareMap.get(Servo.class, "claw");
         this.axis=hardwareMap.get(Servo.class, "axis");
-        this.NotAxis=0.415;
+        this.NotAxis=zeroaxis;
+        this.NotAngle=zeroarm;
         this.updateAxis();
         //this.crservoL=hardwareMap.get(CRServo.class, "crservoL");
         //this.crservoR=hardwareMap.get(CRServo.class, "crservoR");
@@ -85,16 +95,25 @@ public class ArmSubsystem {
 
     }
     public void setZero(){
-        NotAngle=7;
-        NotAxis=0.4;
-        updateArm();
+        //NotAngle=zeroarm;
+        //NotAxis=zeroaxis;
+        setPosition(0);
+        //updateArm();
 
         extended = false;
     }
 
     public void setPosition(double position){
+        if(position==0){
+            NotAngle=zeroarm;
+            NotAxis=zeroaxis;
+        }
         if(position==1){
-            NotAngle=-30;
+            NotAngle=-50;
+            NotAxis=0.3;
+        }
+        if(position==2){
+            NotAngle=-70;
             NotAxis=0.3;
         }
         extended = true;
@@ -102,16 +121,25 @@ public class ArmSubsystem {
     }
 
     public void updateArm(){
-        armMotor.setTargetPosition((int) NotAngle);
-        if(going_down){
-            //servoL.setPosition(angle-0.3);
-            //servoR.setPosition(servoR.MAX_POSITION-angle+0.3);
-        }else{
-            //servoL.setPosition(angle);
-            //servoR.setPosition(servoR.MAX_POSITION-angle);
+
+        if(extraAmount==0&&piding){
+            armMotor.setPower(0.8);
+            armMotor.setTargetPosition((int) NotAngle);
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if(going_down){
+                //servoL.setPosition(angle-0.3);
+                //servoR.setPosition(servoR.MAX_POSITION-angle+0.3);
+            }else{
+                //servoL.setPosition(angle);
+                //servoR.setPosition(servoR.MAX_POSITION-angle);
+            }
+            updateAxis();
+        }else {
+            armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            armMotor.setPower(extraAmount);
         }
 
-        updateAxis();
+
     }
     private void updateAxis(){
         if(extended){

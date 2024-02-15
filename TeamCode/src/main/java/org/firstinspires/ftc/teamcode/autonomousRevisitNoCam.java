@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ChassisSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ODSub;
 import org.firstinspires.ftc.teamcode.subsystems.OdometrySubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OpenCVSubsystem;
 
@@ -100,7 +101,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 teamdiff = -1;
             }
             if (!delay.equals("")) {
-                utils.waitMs(Integer.parseInt(delay), telemetry);
+                sleep(Integer.parseInt(delay)* 1000L);
             }
 
 
@@ -117,24 +118,30 @@ public class autonomousRevisitNoCam extends LinearOpMode {
             arm.close();
             //point to prop
             odometry.goToYolo(-17 * teamdiff, 0, 0.5, false);
-            odometry.rotatePeroMejor(90 * teamdiff);
+            odometry.rotatePeroMejor(83 * teamdiff);
 
             if (cameras.equals("on")) {
-                utils.waitMs(300, telemetry);
-                if (camera.getcx() > 20 && camera.getcx() < 600) {
-                    prop = "2";
-                } else {
-                    odometry.rotatePeroMejor(-15 * teamdiff);
-                    if (camera.getcx() > 20 & camera.getcx() < 600) {
-                        prop = "1";
-                    } else {
-                        prop = "3";
-                    }
-                }
+                ODSub sub = new ODSub();
+                sub.telemetry=telemetry;
+                sub.hardwareMap = hardwareMap;
+                sub.initTfod();
+                sleep(10000);
+                sub.telemetryTfod();
+                telemetry.update();
+                sleep(5000);
                 //telemetry.addData("area",camera.area());
+                if(sub.lastrecX!=0){
+                    if(sub.lastrecX>700){
+                        prop="1";
+                    }else {
+                        prop="2";
+                    }
+                }else {
+                    prop="3";
+                }
                 telemetry.addData("prop", prop);
                 telemetry.update();
-                //utils.waitMs(2000, telemetry);
+
 
             }
 
@@ -150,11 +157,13 @@ public class autonomousRevisitNoCam extends LinearOpMode {
             //intake.setPower(0.2);
             //utils.waitMs(1000,telemetry);
             if (Objects.equals(prop, "1")) {
+                odometry.goToYolo(0, 7, 0.5, false);
                 intake.setPower(0.2);
                 utils.waitMs(1500, telemetry);
                 //utils.waitMs(2000,telemetry);
                 //utils.intakeTime(2000,telemetry,intake,0.2);
                 intake.setPower(0);
+                odometry.goToYolo(0, 55, 0.5, false);
             }
             if (Objects.equals(prop, "2")) {
                 odometry.rotatePeroMejor(-90 * teamdiff);
@@ -164,6 +173,8 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 //utils.intakeTime(2000,telemetry,intake,0.2);
                 intake.setPower(0);
                 odometry.rotatePeroMejor(180);
+                odometry.goToYolo(0, 60, 0.5, false);
+
             }
             //intake.setPower(0.5);
             odometry.goToYolo(0, 60, 0.5, false);
@@ -175,33 +186,10 @@ public class autonomousRevisitNoCam extends LinearOpMode {
             if (risky.equals("yes")) {
                 if (Objects.equals(robotPosition, "back")) {
 
-                    odometry.goToYolo(0, 10, 0.5, false);
-                    odometry.rotatePeroMejor(0);
-                    intake.setPower(-0.7);
-                    //arm.open();
-                    odometry.goToYolo(0, 110, 0.5, false);
-                    //odometry.rotatePeroMejor(0);
 
+                    odometry.goToYolo(0, 40, 0.3, false);
 
-                    //odometry.goToYolo(0,60,0.5,false);
-                    arm.close();
-                    intake.setPower(0);
-                    odometry.rotatePeroMejor(180);
-
-                    //odometry.goToYolo(0, 50, 0.5, false);
-                    //arm.open();
-                    //arm.open();
-                    //arm.open();
-                    //arm.open();
-                    //arm.open();
-                    odometry.goToYolo(0, -20, 0.3, false);
-                    arm.close();
-                    arm.close();
-                    arm.close();
-                    arm.close();
-                    arm.close();
-                    utils.waitMs(300, telemetry);
-                    odometry.goToYolo(0, 25, 0.3, false);
+                    sleep(5000);
                 } else if (robotPosition.equals("front")) {
                     odometry.goToYolo(0, 20, 0.5, false);
                 }
@@ -227,36 +215,26 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 }
 
                 elevator.stop();
+                sleep(5000);
                 //odometry.rotatePeroMejor(180);
-                arm.setPosition(0.4);
-                arm.updateArm();
-                telemetry.update();
-                arm.updateArm();
-                arm.updateArm();
-                arm.updateArm();
-                telemetry.update();
-                arm.updateArm();
-                telemetry.addData("angle", arm.NotAngle);
-                telemetry.update();
-                utils.waitMs(1000, telemetry);
+
+                arm.setPosition(1);
+
+                sleep(2000);
 
 
-                if (prop.equals("1")) {
+                if (prop.equals("3")) {
                     odometry.goToYolo(-15, 26, 0.5, false);
                 }
                 if (prop.equals("2")) {
                     odometry.goToYolo(0, 26, 0.5, false);
                 }
-                if (prop.equals("3")) {
+                if (prop.equals("1")) {
                     odometry.goToYolo(15, 26, 0.5, false);
                 }
                 //odometry.goToYolo(0,20,0.5,false);
-                utils.waitMs(300, telemetry);
-                //arm.open();
-                telemetry.update();
-                //arm.open();
-                //arm.open();
-                utils.waitMs(300, telemetry);
+
+                sleep(500);
 
                 arm.open();
                 telemetry.addData("state", "done");
@@ -283,7 +261,6 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 //arm.updateArm();
 
                 odometry.goToYolo(0,-10,0.5,false);
-                utils.waitMs(1000, telemetry);
 
             } else {
                 if (robotPosition.equals("front")) {

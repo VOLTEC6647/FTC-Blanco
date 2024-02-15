@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DroneLauncherSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.GyroscopeSubsystem;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.teamcode.subsystems.Parameters;
@@ -41,7 +42,7 @@ public class Chassis extends LinearOpMode {
     public double gyr;
 
     private boolean mix = true;
-    void ElevatorMethods(ElevatorSubsystem elevator, ChassisSubsystem chassis){
+    void ElevatorMethods(ElevatorSubsystem elevator, ChassisSubsystem chassis,ArmSubsystem arm){
         /*
         if(controller1.right_trigger>0.1){
             elevator.goUp(controller1.right_trigger);
@@ -73,26 +74,33 @@ public class Chassis extends LinearOpMode {
             }
 
              */
-            if(Math.abs(controller2.right_stick_y)>0.3) {
+            if(Math.abs(controller2.right_stick_y)>0.2) {
                 elevator.DebugSpeed = Math.abs(controller2.right_stick_y);
                 telemetry.addData("lsthikkk",controller2.right_stick_y);
-                if (controller2.right_stick_y > 0.3) {
+                if (controller2.right_stick_y > 0.2) {
+                    elevator.goingup = false;
+                    elevator.goingdown = true;
                     elevator.goDown();
-                    elevator.holding = false;
+                    //elevator.holding = false;
                     if(controller2.y){
                         elevator.holding = true;
                     }
 
-                } else if (controller2.right_stick_y < -0.3) {
+                } else if (controller2.right_stick_y < -0.2) {
+                    elevator.goingdown=false;
+                    elevator.goingup=true;
                     elevator.goUp();
                     elevator.holding = false;
                 }else{
+                    elevator.goingup = false;
+                    elevator.goingdown = false;
                     elevator.stop();
                 }
             }else if(elevator.holding){
                 elevator.DebugSpeed=0.4;
                 elevator.goDown();
                 chassis.REnabled=false;
+                arm.piding = false;
             }else {
                 elevator.stop();
             }
@@ -188,7 +196,7 @@ public class Chassis extends LinearOpMode {
 
         }
     }
-    void ArmMethods(ArmSubsystem arm, PivotSubsystem pivot){
+    void ArmMethods(ArmSubsystem arm, PivotSubsystem pivot, ElevatorSubsystem elevator){
 
         if(info.name=="gobilda"){
             arm.going_down =Chassis.controller2.left_stick_y < -0.2;
@@ -198,16 +206,17 @@ public class Chassis extends LinearOpMode {
         if(!controller2.start){
             if (controller2.dpad_right) {
                 if(info.name=="gobilda") {
-                    //arm.setPosition(0.5);
-                    arm.updateArm();
+                    arm.piding=true;
+                    arm.setPosition(2);
+
                 }else {
                     pivot.up();
                 }
 
             } else if (controller2.dpad_down) {
                 if(info.name=="gobilda") {
+                    arm.piding=true;
                     arm.setPosition(1);
-                    arm.updateArm();
                 }else {
                     pivot.up();
                 }
@@ -216,8 +225,9 @@ public class Chassis extends LinearOpMode {
             else if(controller2.dpad_left) {
                 if(info.name=="gobilda") {
                     if(!arm.open){
+                        arm.piding=true;
                         arm.setZero();
-                        arm.updateArm();
+
                     }
                 }else {
                     pivot.down();
@@ -232,6 +242,15 @@ public class Chassis extends LinearOpMode {
                 }
 
             }
+            if(controller2.right_stick_button){
+                arm.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                arm.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            if(arm.extraAmount>0&&!arm.open){
+                arm.piding = false;
+            }
+            telemetry.addData("arm.piding",arm.piding);
+            telemetry.addData("arm.extraAmount",arm.extraAmount);
         }
 
         if (controller2.right_bumper) {
@@ -258,8 +277,15 @@ public class Chassis extends LinearOpMode {
             telemetry.addData("angle", arm.NotAngle);
         }
 
-        if(controller1.right_trigger>0.1){
-            //arm.
+        if(controller2.right_trigger>0.1){
+            arm.extraAmount = controller2.right_trigger*.3;
+            arm.updateArm();
+        }else if(controller2.left_trigger>0.1) {
+            arm.extraAmount = -controller2.left_trigger*.3;
+            arm.updateArm();
+        }else if(arm.extraAmount!=0){
+           arm.extraAmount=0;
+        arm.updateArm();
         }
 
 
@@ -325,10 +351,10 @@ public class Chassis extends LinearOpMode {
 
             ChassisMethods(chassis,gyroscope);
 
-            ElevatorMethods(elevator,chassis);
+            ElevatorMethods(elevator,chassis,arm);
 
             if(info.name=="gobilda") {
-                ArmMethods(arm, pivot);
+                ArmMethods(arm, pivot,elevator);
             }else{
                 pivot.pivotControls(this.gamepad2.a,this.gamepad2.b,this.gamepad2.left_bumper, this.gamepad2.right_bumper);
             }

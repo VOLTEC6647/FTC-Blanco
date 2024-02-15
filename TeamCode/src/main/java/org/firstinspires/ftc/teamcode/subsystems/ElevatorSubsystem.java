@@ -26,6 +26,9 @@ public class ElevatorSubsystem {
 
     public boolean holding = false;
 
+    public boolean goingdown = false;
+    public boolean goingup = false;
+
     public static ElevatorSubsystem getInstance(HardwareMap hardwareMap, Telemetry telemetry){
         if (instance == null) {
             instance = new ElevatorSubsystem(hardwareMap,telemetry);

@@ -7,7 +7,7 @@ import com.kauailabs.navx.ftc.AHRS;
 public class GyroscopeSubsystem {
 
     private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
-    private AHRS navx;
+    public AHRS navx;
     private static GyroscopeSubsystem instance;
     private int offset;
 
@@ -28,7 +28,7 @@ public class GyroscopeSubsystem {
         return navx.getYaw()+offset;
     }
     public double robotYaw() {
-        return navx.getYaw();
+        return navx.getPitch();
     }
 
     public void reset(){
