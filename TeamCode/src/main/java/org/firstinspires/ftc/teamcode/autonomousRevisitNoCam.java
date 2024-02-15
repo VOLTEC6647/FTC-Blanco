@@ -189,7 +189,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 //utils.intakeTime(2000,telemetry,intake,0.2);
                 intake.setPower(0);
                 odometry.rotatePeroMejor(180);
-                odometry.goToYolo(0, 60, 0.3, false);
+                odometry.goToYolo(0, 55, 0.3, false);
 
             }
             //intake.setPower(0.5);
