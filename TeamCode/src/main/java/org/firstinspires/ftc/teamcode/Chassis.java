@@ -380,6 +380,11 @@ public class Chassis extends LinearOpMode {
 
         }
         */
+        ChassisSubsystem.unaliveInstance();
+        ElevatorSubsystem.unaliveInstance();
+        GyroscopeSubsystem.unaliveInstance();
+        DroneLauncherSubsystem.unaliveInstance();
+
 
     }
 

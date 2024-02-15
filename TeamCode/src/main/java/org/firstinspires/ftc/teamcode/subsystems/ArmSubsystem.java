@@ -110,11 +110,15 @@ public class ArmSubsystem {
         }
         if(position==1){
             NotAngle=-50;
-            NotAxis=0.3;
+            NotAxis=0.26;
         }
         if(position==2){
-            NotAngle=-70;
+            NotAngle=-80;
             NotAxis=0.3;
+        }
+        if(position==3){
+            NotAngle=-120;
+            NotAxis=0.5;
         }
         extended = true;
         updateArm();
@@ -166,6 +170,9 @@ public class ArmSubsystem {
         open = false;
     }
 
+    public static void unaliveInstance() {
+        instance = null;
+    }
 
 
 }

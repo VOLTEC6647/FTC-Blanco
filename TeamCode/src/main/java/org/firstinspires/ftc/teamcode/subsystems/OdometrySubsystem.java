@@ -88,27 +88,28 @@ public class OdometrySubsystem {
     final double KP = 0.05;
 
     public void goToYolo(int x, int y, double speed, Boolean persist) {
+        Telemetry.Item status=null;
         time.reset();
         time.startTime();
         resetEncoders();
         while (Math.abs(y - getYDist())+Math.abs(x - getXDist()) > 8&&time.milliseconds()<timeout) {
-            telemetry.addData("state","moving "+x+"-"+y);
+            status = telemetry.addData("state","moving "+x+"-"+y);
             int xdir=0;
             int ydir=0;
             int xOffset = 1;
             int yOffset = 1;
             if(x!=0){
-                if (x - getXDist()>0){
+                if (x - getXDist()>4){
                     xdir=1;
-                }else if (x - getXDist()<0){
+                }else if (x - getXDist()<-4){
                     xdir=-1;
                 }
             }
 
             if(y!=0) {
-                if (y - getYDist() > 0) {
+                if (y - getYDist() > 4) {
                     ydir = 1;
-                } else if (y - getYDist() < 0) {
+                } else if (y - getYDist() < -4) {
                     ydir = -1;
                 }
             }
@@ -126,6 +127,8 @@ public class OdometrySubsystem {
         if(!persist){
             chassis.setMotors(0,0,0,0);
         }
+        telemetry.removeItem(status);
+
     }
 
     public int timeout=5000;
@@ -135,12 +138,13 @@ public class OdometrySubsystem {
     private static ElapsedTime time = new ElapsedTime();
 
     public void rotatePeroMejor(int dir) {
+        Telemetry.Item status=null;
         time.reset();
         time.startTime();
         chassis.targetAngle=dir;
         while (Math.abs(gyr.getRotation()-dir)>4&&time.milliseconds()<timeout) {
             while (Math.abs(gyr.getRotation() - dir) > 4&&time.milliseconds()<timeout) {
-                telemetry.addData("state", "rotating "+dir);
+                status = telemetry.addData("state", "rotating "+dir);
                 telemetry.addData("timeout",timeout-time.milliseconds());
 
                 if(Math.abs(gyr.getRotation() - dir) < 20){
@@ -155,8 +159,9 @@ public class OdometrySubsystem {
                     throw new IllegalArgumentException("navx unalive");
                 }
             }
-            utils.waitMs(100,telemetry);
+            utils.waitMs(20,telemetry);
         }
+        telemetry.removeItem(status);
         //recuerdenme cambiar esto ántes del nacional
         if(dir==0){
             encoderOrientationX=1;

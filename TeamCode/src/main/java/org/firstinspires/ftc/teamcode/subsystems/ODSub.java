@@ -154,6 +154,7 @@ public class ODSub {
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
+    int record = 0;
     public void telemetryTfod() {
 
         List<Recognition> currentRecognitions = tfod.getRecognitions();
@@ -165,6 +166,7 @@ public class ODSub {
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
+
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
 
@@ -172,7 +174,13 @@ public class ODSub {
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-            lastrecX=x;
+            telemetry.addData("Credibility", recognition.getConfidence());
+
+            if(recognition.getConfidence()>record&&recognition.getConfidence()>0.8){
+                record = (int) recognition.getConfidence();
+                lastrecX=x;
+            }
+
         }   // end for() loop
 
     }   // end method telemetryTfod()

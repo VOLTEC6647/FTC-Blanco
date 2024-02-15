@@ -119,5 +119,9 @@ public class ElevatorSubsystem {
         telemetry.addData("elevator2", elevator2.getCurrentPosition());
     }
 
+    public static void unaliveInstance() {
+        instance = null;
+    }
+
 
 }

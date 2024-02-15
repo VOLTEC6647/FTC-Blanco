@@ -39,5 +39,8 @@ public class GyroscopeSubsystem {
         offset = degrees;
     }
 
+    public static void unaliveInstance() {
+        instance = null;
+    }
 
 }

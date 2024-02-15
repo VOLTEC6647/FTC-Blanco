@@ -275,6 +275,8 @@ public class ChassisSubsystem {
         }
     }
 
-
+    public static void unaliveInstance() {
+        instance = null;
+    }
 
 }

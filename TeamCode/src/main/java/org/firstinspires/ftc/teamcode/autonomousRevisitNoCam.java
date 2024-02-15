@@ -61,7 +61,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
 
         control_Hub = hardwareMap.get(Blinker.class, "Control Hub");
         intake = hardwareMap.get(DcMotor.class, "intake");
-
+        GyroscopeSubsystem.unaliveInstance();
         //camera = OpenCVSubsystem.getInstance(hardwareMap, telemetry);
         //camera = OpenCVSubsystem.getInstance(hardwareMap, telemetry);
         chassis = ChassisSubsystem.getInstance(hardwareMap, telemetry);
@@ -117,7 +117,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
             */
             arm.close();
             //point to prop
-            odometry.goToYolo(-17 * teamdiff, 0, 0.5, false);
+            odometry.goToYolo(-15 * teamdiff, 0, 0.5, false);
             odometry.rotatePeroMejor(83 * teamdiff);
 
             if (cameras.equals("on")) {
@@ -130,18 +130,34 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 telemetry.update();
                 sleep(5000);
                 //telemetry.addData("area",camera.area());
-                if(sub.lastrecX!=0){
-                    if(sub.lastrecX>700){
-                        prop="1";
-                    }else {
-                        prop="2";
+
+                if(team.equals("blue")) {
+                    if (sub.lastrecX != 0) {
+
+                        if (sub.lastrecX > 700) {
+                            prop = "3";
+                        } else {
+                            prop = "2";
+                        }
+                    } else {
+                        prop = "1";
                     }
-                }else {
-                    prop="3";
+                }else{
+                    if (sub.lastrecX != 0) {
+
+                        if (sub.lastrecX > 700) {
+                            prop = "1";
+                        } else {
+                            prop = "2";
+                        }
+                    } else {
+                        prop = "3";
+                    }
                 }
                 telemetry.addData("prop", prop);
                 telemetry.update();
-
+                sub.visionPortal.setProcessorEnabled(sub.tfod, false);
+                sub.visionPortal=null;
 
             }
 
@@ -149,63 +165,63 @@ public class autonomousRevisitNoCam extends LinearOpMode {
             //place pixel
             odometry.rotatePeroMejor(180);
 
-            odometry.goToYolo(-57 * teamdiff, 0, 0.5, false);
+            odometry.goToYolo(-53 * teamdiff, 0, 0.5, false);
 
             //odometry.goToYolo(0, 10, 0.5, false);
             //intake.setPower(0.1);
             //utils.waitMs(500, telemetry);
             //intake.setPower(0.2);
             //utils.waitMs(1000,telemetry);
-            if (Objects.equals(prop, "1")) {
-                odometry.goToYolo(0, 7, 0.5, false);
+            if (Objects.equals(prop, "3")) {
+                odometry.goToYolo(0, 10, 0.3, false);
                 intake.setPower(0.2);
-                utils.waitMs(1500, telemetry);
+                sleep(1500);
                 //utils.waitMs(2000,telemetry);
                 //utils.intakeTime(2000,telemetry,intake,0.2);
                 intake.setPower(0);
-                odometry.goToYolo(0, 55, 0.5, false);
+                odometry.goToYolo(0, 55, 0.3, false);
             }
             if (Objects.equals(prop, "2")) {
                 odometry.rotatePeroMejor(-90 * teamdiff);
                 intake.setPower(0.2);
-                utils.waitMs(1500, telemetry);
+                sleep(1500);
                 //utils.waitMs(2000,telemetry);
                 //utils.intakeTime(2000,telemetry,intake,0.2);
                 intake.setPower(0);
                 odometry.rotatePeroMejor(180);
-                odometry.goToYolo(0, 60, 0.5, false);
+                odometry.goToYolo(0, 60, 0.3, false);
 
             }
             //intake.setPower(0.5);
             odometry.goToYolo(0, 60, 0.5, false);
-            if (Objects.equals(prop, "3")) {
+            if (Objects.equals(prop, "1")) {
                 intake.setPower(0.3);
-                utils.waitMs(1500, telemetry);
+                sleep(1500);
                 intake.setPower(0);
             }
             if (risky.equals("yes")) {
                 if (Objects.equals(robotPosition, "back")) {
 
 
-                    odometry.goToYolo(0, 40, 0.3, false);
+                    odometry.goToYolo(0, 130, 0.3, false);
 
-                    sleep(5000);
+                    sleep(500);
                 } else if (robotPosition.equals("front")) {
-                    odometry.goToYolo(0, 20, 0.5, false);
+                    odometry.goToYolo(0, 20, 0.3, false);
                 }
 
 
-                elevator.DebugSpeed = 0.75;
+                elevator.DebugSpeed = 0.85;
 
                 ElapsedTime notTime = new ElapsedTime();
                 notTime.reset();
                 notTime.startTime();
 
-                while (-elevator.elevator1.getCurrentPosition() > -1500) {
+                while (-elevator.elevator1.getCurrentPosition() > -1800) {
                     elevator.goUp();
                     telemetry.addData("status", "elevating " + "-1300");
                     elevator.getPosition(telemetry);
-                    if (notTime.milliseconds() > 4000) {
+                    if (notTime.milliseconds() > 6000) {
                         try {
                             throw new Exception("amogus");
                         } catch (Exception e) {
@@ -215,22 +231,24 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 }
 
                 elevator.stop();
-                sleep(5000);
+                sleep(500);
                 //odometry.rotatePeroMejor(180);
 
                 arm.setPosition(1);
 
-                sleep(2000);
+                arm.piding=true;
+
+                sleep(1000);
 
 
-                if (prop.equals("3")) {
-                    odometry.goToYolo(-15, 26, 0.5, false);
+                if (prop.equals("1")) {
+                    odometry.goToYolo(-19, 26, 0.3, false);
                 }
                 if (prop.equals("2")) {
-                    odometry.goToYolo(0, 26, 0.5, false);
+                    odometry.goToYolo(0, 26, 0.3, false);
                 }
-                if (prop.equals("1")) {
-                    odometry.goToYolo(15, 26, 0.5, false);
+                if (prop.equals("3")) {
+                    odometry.goToYolo(19, 26, 0.3, false);
                 }
                 //odometry.goToYolo(0,20,0.5,false);
 
@@ -239,15 +257,17 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 arm.open();
                 telemetry.addData("state", "done");
                 telemetry.update();
-                utils.waitMs(2000, telemetry);
+                sleep(1000);
 
+                notTime.reset();
+                notTime.startTime();
 
-                elevator.DebugSpeed = 1;
-                while (-elevator.elevator1.getCurrentPosition() > -2000 && false) {
+                //elevator.DebugSpeed = 1;
+                while (-elevator.elevator1.getCurrentPosition() > -2200 && true) {
                     elevator.goUp();
                     telemetry.addData("status", "elevating " + "-2000");
                     elevator.getPosition(telemetry);
-                    if (notTime.milliseconds() > 4000) {
+                    if (notTime.milliseconds() > 6000) {
                         try {
                             throw new Exception("amogus2");
                         } catch (Exception e) {
@@ -255,12 +275,17 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                         }
                     }
                 }
-                //arm.setZero();
+                arm.piding=true;
+                arm.setPosition(1);
 
-                //arm.axis.setPosition(arm.axis.MAX_POSITION - 0.2);
-                //arm.updateArm();
+                sleep(2000);
 
-                odometry.goToYolo(0,-10,0.5,false);
+                odometry.goToYolo(0,-20,0.5,false);
+
+                //odometry.goToYolo(0,-10,0.5,false);
+                arm.open();
+                arm.setPosition(1);
+                sleep(1000);
 
             } else {
                 if (robotPosition.equals("front")) {

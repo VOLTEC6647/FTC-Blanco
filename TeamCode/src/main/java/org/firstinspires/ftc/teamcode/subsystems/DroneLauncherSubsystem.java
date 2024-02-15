@@ -36,4 +36,8 @@ public class DroneLauncherSubsystem {
     telemetry.addData("launcher",launcher.getPosition());
 
     }
+
+    public static void unaliveInstance() {
+        instance = null;
+    }
 }
