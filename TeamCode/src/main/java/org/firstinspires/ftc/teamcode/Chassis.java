@@ -235,8 +235,8 @@ public class Chassis extends LinearOpMode {
 
             }else if(controller2.dpad_up){
                 if(info.name=="gobilda") {
-                    //arm.setPosition(0.7);
-                    arm.updateArm();
+                    arm.piding=true;
+                    arm.setPosition(3);
                 }else {
 
                 }

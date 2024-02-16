@@ -44,6 +44,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
 
     private String cameras = "";
 
+    private String doPark = "";
 
     public double gyr;
 
@@ -92,7 +93,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
         //arm.open();
 
 
-        if (team != "" && robotPosition != "" && prop != "" && auto != "disabled") {
+        if (team != "" && robotPosition != "" && prop != "" && doPark != "") {
             int teamdiff = 0;
             if (team.equals("red")) {
                 teamdiff = 1;
@@ -288,11 +289,13 @@ public class autonomousRevisitNoCam extends LinearOpMode {
                 sleep(1000);
 
             } else {
-                if (robotPosition.equals("front")) {
-                    odometry.goToYolo(0, 15, 0.5, false);
-                }
-                if (robotPosition.equals("back")) {
-                    odometry.goToYolo(0, 90, 0.5, false);
+                if(doPark.equals("yes")){
+                    if (robotPosition.equals("front")) {
+                        odometry.goToYolo(0, 15, 0.5, false);
+                    }
+                    if (robotPosition.equals("back")) {
+                        odometry.goToYolo(0, 90, 0.5, false);
+                    }
                 }
             }
 
@@ -337,6 +340,9 @@ public class autonomousRevisitNoCam extends LinearOpMode {
         myFileName = AppUtil.getInstance().getSettingsFile("camera.txt");
         cameras = ReadWriteFile.readFile(myFileName);
 
+        myFileName = AppUtil.getInstance().getSettingsFile("dopark.txt");
+        doPark = ReadWriteFile.readFile(myFileName);
+
         telemetry.addData("Prop", prop);
         telemetry.addData("Team", team);
         telemetry.addData("Auto", auto);
@@ -344,6 +350,7 @@ public class autonomousRevisitNoCam extends LinearOpMode {
         telemetry.addData("Delay", delay);
         telemetry.addData("Risky", risky);
         telemetry.addData("Camera", cameras);
+        telemetry.addData("Park", doPark);
 
 
     }

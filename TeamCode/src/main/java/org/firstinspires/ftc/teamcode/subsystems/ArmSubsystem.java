@@ -114,7 +114,7 @@ public class ArmSubsystem {
         }
         if(position==2){
             NotAngle=-80;
-            NotAxis=0.3;
+            NotAxis=0.4;
         }
         if(position==3){
             NotAngle=-120;
